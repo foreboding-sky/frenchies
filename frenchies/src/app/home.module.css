@@ -1,0 +1,33 @@
+.container {
+    padding: 2rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.banner {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+}
+
+.title {
+    color: var(--accent-color);
+    font-size: 3rem;
+}
+
+.subtitle {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.services {
+    margin-top: 4rem;
+}
