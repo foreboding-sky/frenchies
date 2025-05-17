@@ -1,7 +1,7 @@
 'use client';
 
 import { frenchiesTheme } from '../lib/theme';
-import { Layout, Menu, ConfigProvider, theme } from 'antd';
+import { Layout, Menu, ConfigProvider } from 'antd';
 import Link from 'next/link';
 
 const { Header, Content, Footer } = Layout;
@@ -24,7 +24,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                 </Header>
                 <Content style={{ padding: '2rem' }}>{children}</Content>
                 <Footer style={{ textAlign: 'center', background: '#EBE4DE', color: '#744010' }}>
-                    ©2025 Frenchies Beauty Salon
+                    ©2025 Frenchies
                 </Footer>
             </Layout>
         </ConfigProvider>

@@ -11,6 +11,7 @@ export const frenchiesTheme: ThemeConfig = {
         colorBorder: '#D6CFC9',          // Soft border
         fontFamily: 'Georgia, serif',    // Elegant serif font
         borderRadius: 8,                 // Softer curves
+
     },
     components: {
         Layout: {
@@ -26,6 +27,9 @@ export const frenchiesTheme: ThemeConfig = {
         },
         Button: {
             colorPrimary: '#CD9BA7',
+        },
+        Card: {
+            colorPrimary: '#EBE4DE',
         },
     },
 };
