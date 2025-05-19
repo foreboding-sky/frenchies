@@ -12,6 +12,7 @@
     "@ant-design/cssinjs": "^1.23.0",
     "@ant-design/nextjs-registry": "^1.0.2",
     "antd": "^5.25.1",
+    "firebase": "^11.7.3",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

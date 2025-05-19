@@ -32,17 +32,17 @@ export default function HomePage() {
         <Title level={2}>Our Services</Title>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={8}>
-            <Card title="Hair Styling" bordered>
+            <Card title="Hair Styling" variant="outlined">
               Professional cuts, coloring & more.
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
-            <Card title="Nail Care" bordered>
+            <Card title="Nail Care" variant="outlined">
               Manicures, pedicures, art design.
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
-            <Card title="Skin Treatments" bordered>
+            <Card title="Skin Treatments" variant="outlined">
               Facials, masks, rejuvenation.
             </Card>
           </Col>
