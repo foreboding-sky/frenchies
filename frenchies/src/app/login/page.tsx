@@ -1,6 +1,6 @@
 'use client';
 
-import { notification, Input, Button, Typography } from 'antd';
+import { App, Input, Button, Typography } from 'antd';
 import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -12,20 +12,18 @@ export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+    const { message } = App.useApp();
 
     const handleLogin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            notification.success({
-                message: 'Login Successful',
-                description: 'Welcome back!',
-            });
+            message.success('Login successfully!');
 
             setTimeout(() => {
                 router.push('/');
             }, 1000);
         } catch (error: any) {
-            notification.error(error.message);
+            message.error(error.message);
         }
     };
 

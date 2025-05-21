@@ -1,10 +1,11 @@
 'use client';
 
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { notification, Input, Button, Typography, message } from 'antd';
+import { App, Input, Button, Typography } from 'antd';
 
 const { Title } = Typography;
 
@@ -12,20 +13,28 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+    const { message } = App.useApp();
 
     const handleRegister = async () => {
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            notification.success({
-                message: 'Registration Successful',
-                description: 'Welcome back!',
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            message.success('Registered successfully!');
+
+            await setDoc(doc(db, 'users', user.uid), {
+                email: user.email,
+                name: '',
+                surname: '',
+                createdAt: serverTimestamp(),
+                phone: '',
+                isAdmin: false
             });
 
             setTimeout(() => {
                 router.push('/');
             }, 1000);
         } catch (error: any) {
-            notification.error(error.message);
+            message.error(error.message);
         }
     };
 

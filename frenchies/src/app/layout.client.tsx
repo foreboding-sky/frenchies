@@ -52,6 +52,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                             { key: 'about', label: <Link href="/about">About Us</Link> },
                             { key: 'services', label: <Link href="/services">Services</Link> },
                             { key: 'products', label: <Link href="/products">Products</Link> },
+                            ...(user
+                                ? [{ key: 'profile', label: <Link href="/profile">Profile</Link> }]
+                                : [])
                         ]}
                     />
                     <Content style={{ padding: '2rem' }}>{children}</Content>
