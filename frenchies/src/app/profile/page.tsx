@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { db } from '@/lib/firebase';
 import {
+    doc,
+    getDoc,
     collection,
     query,
     where,
@@ -23,12 +25,14 @@ import {
 } from 'antd';
 
 import { Order } from '@/types/order';
+import { UserProfile } from '@/types/user';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 export default function ProfilePage() {
     const { user } = useAuth();
+    const [profile, setProfile] = useState<UserProfile | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const { message } = App.useApp();
@@ -36,8 +40,17 @@ export default function ProfilePage() {
     useEffect(() => {
         if (!user) return;
 
-        const fetchOrders = async () => {
+        const fetchData = async () => {
             try {
+                // Fetch user profile
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.data() as UserProfile;
+                    setProfile(userData);
+                }
+
+                // Fetch orders
                 const q = query(
                     collection(db, 'orders'),
                     where('userId', '==', user.uid),
@@ -50,15 +63,16 @@ export default function ProfilePage() {
                 }));
                 setOrders(docs);
             } catch (error) {
-                console.error('Failed to fetch orders:', error);
-                message.error('Could not fetch orders');
+                console.error('Failed to fetch data:', error);
+                message.error('Could not fetch data');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchOrders();
+        fetchData();
     }, [user]);
+
 
     const formatDate = (timestamp: Timestamp | any) => {
         if (!timestamp) return '';
@@ -101,10 +115,12 @@ export default function ProfilePage() {
                     {
                         label: 'Personal Info',
                         key: '1',
-                        children: user ? (
+                        children: profile ? (
                             <Descriptions column={1} bordered>
-                                <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
-                                <Descriptions.Item label="User ID">{user.uid}</Descriptions.Item>
+                                <Descriptions.Item label="Email">{profile.email}</Descriptions.Item>
+                                <Descriptions.Item label="Phone">{profile.phone}</Descriptions.Item>
+                                <Descriptions.Item label="Name">{profile.name}</Descriptions.Item>
+                                <Descriptions.Item label="Surname">{profile.surname}</Descriptions.Item>
                             </Descriptions>
                         ) : (
                             <Spin />
