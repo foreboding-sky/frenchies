@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
+import Link from 'next/link';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { Input, Select, List, Card, Typography, Tag, Image, Space } from 'antd';
+import { Input, Select, List, Card, Typography, Tag, Image, Space, Button } from 'antd';
+import AddToCartButton from '@/components/AddToCartButton';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -107,6 +109,10 @@ export default function ProductsPage() {
                                     <Tag key={tag}>{tag}</Tag>
                                 ))}
                             </div>
+                            <AddToCartButton product={product} compact />
+                            <Link href={`/products/${product.id}`}>
+                                <Button type="link">View Product</Button>
+                            </Link>
                         </Card>
                     </List.Item>
                 )}

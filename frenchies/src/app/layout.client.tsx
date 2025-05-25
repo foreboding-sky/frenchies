@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+import CartBadge from '@/components/CartBadge';
 
 const { Header, Content, Footer } = Layout;
 
@@ -28,7 +29,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                             <Space>
                                 {user ? (
                                     <>
-                                        <span className="text-[#744010] font-medium">Welcome, {user.email}</span>
+                                        <span className="text-[#744010] font-medium">Welcome, {user.email}</span>\
+                                        <CartBadge />
                                         <Button onClick={handleLogout}>Log Out</Button>
                                     </>
                                 ) : (

@@ -19,6 +19,8 @@ export default function RegisterPage() {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+            const cartRef = doc(db, "carts", user.uid);
+
             message.success('Registered successfully!');
 
             await setDoc(doc(db, 'users', user.uid), {
@@ -28,6 +30,11 @@ export default function RegisterPage() {
                 createdAt: serverTimestamp(),
                 phone: '',
                 isAdmin: false
+            });
+            await setDoc(cartRef, {
+                userId: user.uid,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             });
 
             setTimeout(() => {

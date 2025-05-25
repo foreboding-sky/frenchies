@@ -29,7 +29,7 @@ export default function AboutPage() {
                 </div>
 
                 <Paragraph className={styles.paragraph}>
-                    📍 <strong>Address:</strong> Kyiv, Ukraine <br />
+                    📍 <strong>Address:</strong> Ivana Vyshenskoho St, 3, Rivne, Rivnens'ka oblast, 33017 <br />
                     📞 <strong>Phone:</strong> +380 98 123 45 67 <br />
                     🕘 <strong>Open:</strong> Mon–Sat 09:00–20:00
                 </Paragraph>
