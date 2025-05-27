@@ -3,10 +3,17 @@
 import Image from 'next/image';
 import { Button, Typography, Row, Col, Card } from 'antd'
 import styles from './home.module.css'
+import { useRouter } from 'next/navigation';
 
 const { Title, Paragraph } = Typography
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const bookAppintment = () => {
+    router.push(`/appointment`);
+  }
+
   return (
     <div className={styles.container}>
       <section className={styles.hero}>
@@ -23,7 +30,7 @@ export default function HomePage() {
         <Paragraph className={styles.subtitle}>
           Pamper yourself with the best hair, nails, and skin care in town.
         </Paragraph>
-        <Button type="primary" size="large">
+        <Button type="primary" size="large" onClick={bookAppintment}>
           Book an Appointment
         </Button>
       </section>

@@ -5,7 +5,7 @@ export type OrderItem = {
     productRef: string;
     title: string;
     imageUrl: string;
-    price: number;
+    priceAtTime: number;
     quantity: number;
 };
 
@@ -26,6 +26,7 @@ export type Order = {
     updatedAt: any;
     deliveredAt: string;
     shippedAt: string;
+    totalPrice: number;
     currency: string;
     coupon: string;
     items: OrderItem[];

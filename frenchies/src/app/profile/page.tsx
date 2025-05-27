@@ -93,15 +93,15 @@ export default function ProfilePage() {
         },
         {
             title: 'Price',
-            dataIndex: 'price',
+            dataIndex: 'priceAtTime',
             key: 'price',
-            render: (price: any) => `$${Number(price).toFixed(2)}`
+            render: (priceAtTime: any) => `$${Number(priceAtTime).toFixed(2)}`
         },
         {
             title: 'Total',
             key: 'total',
             render: (_: any, record: any) =>
-                `$${(record.price * record.quantity).toFixed(2)}`,
+                `$${(record.priceAtTime * record.quantity).toFixed(2)}`,
         },
     ];
 

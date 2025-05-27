@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, deleteDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
 import { useCartItems } from '@/hooks/useCartItems';
@@ -14,10 +14,42 @@ export default function CheckoutPage() {
     const { user } = useAuth();
     const { cartItems, loading } = useCartItems();
     const { message } = App.useApp();
+    const [form] = Form.useForm();
 
     const [submitting, setSubmitting] = useState(false);
+    const [initialName, setInitialName] = useState('');
+    const [initialSurname, setInitialSurname] = useState('');
+    const [initialPhone, setInitialPhone] = useState('');
 
-    const [form] = Form.useForm();
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (!user) return;
+
+            try {
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    setInitialName(userData.name || '');
+                    setInitialSurname(userData.surname || '');
+                    setInitialPhone(userData.phone || '');
+                }
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [user]);
+
+    useEffect(() => {
+        form.setFieldsValue({
+            name: initialName,
+            surname: initialSurname,
+            phone: initialPhone,
+        });
+    }, [initialName, initialSurname, initialPhone]);
 
     const handleFinish = async (values: any) => {
         if (!user) return;
@@ -27,6 +59,10 @@ export default function CheckoutPage() {
         try {
             const timestamp = new Date();
             const orderNumber = `ORDER-${timestamp.toISOString().slice(0, 19).replace(/[-T:]/g, '')}-${user.uid.slice(0, 6)}`;
+            const totalPrice = cartItems.reduce(
+                (sum, item) => sum + item.priceAtTime * item.quantity,
+                0
+            );
 
             const order: Order = {
                 userId: user.uid,
@@ -45,6 +81,7 @@ export default function CheckoutPage() {
                 updatedAt: serverTimestamp(),
                 deliveredAt: '',
                 shippedAt: '',
+                totalPrice: totalPrice,
                 currency: 'USD',
                 coupon: '',
                 items: cartItems.map((item): OrderItem => ({
@@ -52,12 +89,12 @@ export default function CheckoutPage() {
                     productRef: `/products/${item.productId}`,
                     title: item.productTitle,
                     imageUrl: item.image,
-                    price: item.priceAtTime,
+                    priceAtTime: item.priceAtTime,
                     quantity: item.quantity,
                 })),
             };
 
-            await addDoc(collection(db, 'orders'), order);
+            const orderRef = await addDoc(collection(db, 'orders'), order);
 
             const batchDeletes = cartItems.map((item) =>
                 deleteDoc(doc(db, 'carts', user.uid, 'cartItems', item.productId))
@@ -65,7 +102,7 @@ export default function CheckoutPage() {
             await Promise.all(batchDeletes);
 
             message.success('Order placed successfully!');
-            router.push('/orders/confirmation');
+            router.push(`/checkout-success?orderId=${orderRef.id}`);
         } catch (err) {
             console.error('Error creating order:', err);
             message.error('Failed to place order. Try again.');
@@ -100,7 +137,7 @@ export default function CheckoutPage() {
                 </Form.Item>
 
                 <Form.Item
-                    label="Surame"
+                    label="Surname"
                     name="surname"
                     rules={[{ required: true, message: 'Please enter your surname' }]}
                 >

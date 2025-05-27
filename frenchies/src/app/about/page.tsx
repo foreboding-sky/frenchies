@@ -1,6 +1,7 @@
 'use client';
 import { Typography, Card } from 'antd';
 import styles from './about.module.css';
+import { InstagramOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
@@ -31,7 +32,15 @@ export default function AboutPage() {
                 <Paragraph className={styles.paragraph}>
                     📍 <strong>Address:</strong> Ivana Vyshenskoho St, 3, Rivne, Rivnens'ka oblast, 33017 <br />
                     📞 <strong>Phone:</strong> +380 98 123 45 67 <br />
-                    🕘 <strong>Open:</strong> Mon–Sat 09:00–20:00
+                    🕘 <strong>Open:</strong> Mon–Sat 09:00–20:00 <br />
+                    <InstagramOutlined className={styles.instagramIcon} style={{ marginLeft: 1.5 }} /><strong>Instagram:</strong>  <a
+                        href="https://www.instagram.com/frenchies.rivne/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.instagramText}
+                    >
+                        @frenchies.rivne
+                    </a>
                 </Paragraph>
             </Card>
         </div>
