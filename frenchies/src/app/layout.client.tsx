@@ -65,7 +65,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return (
         <AntdConfigProvider>
             <AntdApp>
-                <Layout style={{ minHeight: '100vh' }}>
+                <Layout style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                     <Header style={{
                         position: 'sticky',
                         top: 0,
@@ -146,7 +146,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                         padding: '2rem',
                         maxWidth: '1200px',
                         margin: '0 auto',
-                        width: '100%'
+                        width: '100%',
+                        flex: 1
                     }}>
                         {children}
                     </Content>
