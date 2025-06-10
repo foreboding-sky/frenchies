@@ -1,62 +1,141 @@
 .aboutWrapper {
-    background-color: #ebe4de;
     min-height: 100vh;
-    padding: 2rem;
+    background-color: var(--bg-color);
     display: flex;
+    flex-direction: column;
+}
+
+.heroSection {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+}
+
+.heroTitle {
+    color: white !important;
+    font-size: 3.5rem !important;
+    margin-bottom: 1rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.heroSubtitle {
+    color: white !important;
+    font-size: 1.5rem !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.contentSection {
+    max-width: 900px;
+    margin: -50px auto 0;
+    padding: 0 2rem 2rem;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .aboutCard {
-    width: 100%;
-    max-width: 900px;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    border-radius: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.aboutCard:hover {
+    transform: translateY(-5px);
 }
 
 .heading {
-    color: #744010;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.subheading {
-    color: #CD9BA7;
-    margin-top: 2rem;
+    color: var(--text-color) !important;
+    margin-bottom: 1.5rem !important;
+    font-size: 1.8rem !important;
 }
 
 .paragraph {
-    color: #744010;
-    font-size: 16px;
-    line-height: 1.7;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.paragraph:last-child {
+    margin-bottom: 0;
 }
 
 .mapContainer {
-    margin: 1rem 0;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
-
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.socialLink {
-    margin-top: 12px;
+.contactCard {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.instagramIcon {
+.contactItem {
+    text-align: center;
+    padding: 1rem;
+}
+
+.contactIcon {
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.contactItem strong {
+    display: block;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.contactItem p {
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.instagramLink {
     color: #d63384;
-    font-size: 16px;
-    margin-right: 6px;
-}
-
-.instagramText {
-    color: inherit;
     text-decoration: none;
-    font-size: 16px;
+    transition: color 0.3s ease;
 }
 
-.icon {
-    font-size: 24px;
-    color: inherit;
+.instagramLink:hover {
+    color: #a5286a;
+}
+
+@media (max-width: 768px) {
+    .heroSection {
+        height: 200px;
+    }
+
+    .heroTitle {
+        font-size: 2.5rem !important;
+    }
+
+    .heroSubtitle {
+        font-size: 1.2rem !important;
+    }
+
+    .contentSection {
+        margin-top: -30px;
+        padding: 0 1rem 2rem;
+        gap: 1rem;
+    }
+
+    .contactItem {
+        padding: 0.5rem;
+    }
 }

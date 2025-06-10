@@ -23,13 +23,28 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return (
         <ConfigProvider theme={frenchiesTheme}>
             <AntdApp>
-                <Layout style={{ minHeight: '100vh', background: '#EBE4DE' }}>
-                    <Header style={{ background: '#EBE4DE', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Layout style={{ minHeight: '100vh' }}>
+                    <Header style={{
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 1000,
+                        padding: '0 2rem',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        height: '64px'
+                    }}>
+                        <div className="text-xl font-semibold">
+                            <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                Frenchies
+                            </Link>
+                        </div>
                         {!loading && (
-                            <Space>
+                            <Space size="middle">
                                 {user ? (
                                     <>
-                                        <span className="text-[#744010] font-medium">Welcome, {user.email}</span>\
+                                        <span style={{ color: 'inherit' }}>Welcome, {user.email}</span>
                                         <CartBadge />
                                         <Button onClick={handleLogout}>Log Out</Button>
                                     </>
@@ -39,7 +54,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                                             <Button>Log In</Button>
                                         </Link>
                                         <Link href="/register">
-                                            <Button type="default">Register</Button>
+                                            <Button type="primary">Register</Button>
                                         </Link>
                                     </>
                                 )}
@@ -48,7 +63,16 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                     </Header>
                     <Menu
                         mode="horizontal"
-                        style={{ background: '#EBE4DE', borderBottom: '1px solid #D6CFC9', justifyContent: 'center' }}
+                        style={{
+                            position: 'sticky',
+                            top: 64,
+                            zIndex: 999,
+                            padding: '0 2rem',
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                            justifyContent: 'center',
+                            height: '48px',
+                            lineHeight: '48px'
+                        }}
                         items={[
                             { key: 'home', label: <Link href="/">Home</Link> },
                             { key: 'about', label: <Link href="/about">About Us</Link> },
@@ -59,8 +83,19 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                                 : [])
                         ]}
                     />
-                    <Content style={{ padding: '2rem' }}>{children}</Content>
-                    <Footer style={{ textAlign: 'center', background: '#EBE4DE', color: '#744010' }}>
+                    <Content style={{
+                        padding: '2rem',
+                        maxWidth: '1200px',
+                        margin: '0 auto',
+                        width: '100%'
+                    }}>
+                        {children}
+                    </Content>
+                    <Footer style={{
+                        textAlign: 'center',
+                        padding: '24px 50px',
+                        boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.06)'
+                    }}>
                         ©2025 Frenchies
                     </Footer>
                 </Layout>

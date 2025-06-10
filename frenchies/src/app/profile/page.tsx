@@ -6,6 +6,7 @@ import { db } from '@/lib/firebase';
 import {
     doc,
     getDoc,
+    updateDoc,
     collection,
     query,
     where,
@@ -22,12 +23,18 @@ import {
     Spin,
     Divider,
     Descriptions,
+    Button,
+    Form,
+    Input,
+    Space,
 } from 'antd';
+import { EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import styles from './profile.module.css';
 
 import { Order } from '@/types/order';
 import { UserProfile } from '@/types/user';
 
-const { TabPane } = Tabs;
+const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 export default function ProfilePage() {
@@ -35,6 +42,8 @@ export default function ProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [form] = Form.useForm();
     const { message } = App.useApp();
 
     useEffect(() => {
@@ -48,6 +57,7 @@ export default function ProfilePage() {
                 if (userSnap.exists()) {
                     const userData = userSnap.data() as UserProfile;
                     setProfile(userData);
+                    form.setFieldsValue(userData);
                 }
 
                 // Fetch orders
@@ -73,11 +83,55 @@ export default function ProfilePage() {
         fetchData();
     }, [user]);
 
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        form.setFieldsValue(profile);
+    };
+
+    const handleSave = async () => {
+        try {
+            const values = await form.validateFields();
+            const userRef = doc(db, 'users', user!.uid);
+            await updateDoc(userRef, values);
+            setProfile({ ...profile!, ...values });
+            setIsEditing(false);
+            message.success('Profile updated successfully');
+        } catch (error) {
+            console.error('Failed to update profile:', error);
+            message.error('Could not update profile');
+        }
+    };
 
     const formatDate = (timestamp: Timestamp | any) => {
         if (!timestamp) return '';
         const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
         return date.toLocaleString();
+    };
+
+    const getStatusClass = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'completed':
+                return styles.statusCompleted;
+            case 'cancelled':
+                return styles.statusCancelled;
+            default:
+                return styles.statusPending;
+        }
+    };
+
+    const getPaymentStatusClass = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'paid':
+                return styles.statusCompleted;
+            case 'failed':
+                return styles.statusCancelled;
+            default:
+                return styles.statusPending;
+        }
     };
 
     const orderColumns = [
@@ -105,58 +159,205 @@ export default function ProfilePage() {
         },
     ];
 
-    return (
-        <div className="max-w-4xl mx-auto p-6">
-            <Typography.Title level={2}>Profile</Typography.Title>
-            <Tabs
-                defaultActiveKey="1"
-                tabPosition="left"
-                items={[
-                    {
-                        label: 'Personal Info',
-                        key: '1',
-                        children: profile ? (
-                            <Descriptions column={1} bordered>
-                                <Descriptions.Item label="Email">{profile.email}</Descriptions.Item>
-                                <Descriptions.Item label="Phone">{profile.phone}</Descriptions.Item>
-                                <Descriptions.Item label="Name">{profile.name}</Descriptions.Item>
-                                <Descriptions.Item label="Surname">{profile.surname}</Descriptions.Item>
-                            </Descriptions>
-                        ) : (
-                            <Spin />
-                        ),
-                    },
-                    {
-                        label: 'Order History',
-                        key: '2',
-                        children: loading ? (
-                            <Spin />
-                        ) : orders.length === 0 ? (
-                            <Typography.Text>You have no orders yet.</Typography.Text>
-                        ) : (
-                            <Collapse
-                                accordion
-                                items={orders.map((order) => ({
-                                    key: order.orderNumber,
-                                    label: `${order.orderNumber} - ${formatDate(order.createdAt)}`,
-                                    children: (
-                                        <>
-                                            <Typography.Text strong>Status:</Typography.Text> {order.status}
-                                            <Divider />
-                                            <Table
-                                                columns={orderColumns}
-                                                dataSource={order.items}
-                                                pagination={false}
-                                                rowKey={(item) => item.productId}
-                                            />
-                                        </>
-                                    ),
-                                }))}
-                            />
-                        ),
-                    },
-                ]}
+    const renderOrderDetails = (order: Order) => (
+        <>
+            <div className={styles.orderInfo}>
+                <div className={styles.orderInfoRow}>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Order Date:</Text>
+                        <Text>{formatDate(order.createdAt)}</Text>
+                    </div>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Total:</Text>
+                        <Text strong>${order.totalPrice?.toFixed(2)}</Text>
+                    </div>
+                </div>
+                <div className={styles.orderInfoRow}>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Status:</Text>
+                        <span className={`${styles.orderStatus} ${getStatusClass(order.status)}`}>
+                            {order.status}
+                        </span>
+                    </div>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Payment:</Text>
+                        <span className={`${styles.orderStatus} ${getPaymentStatusClass(order.paymentStatus)}`}>
+                            {order.paymentStatus}
+                        </span>
+                    </div>
+                </div>
+                <div className={styles.orderInfoRow}>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Customer:</Text>
+                        <Text>{order.name} {order.surname}</Text>
+                    </div>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Phone:</Text>
+                        <Text>{order.phone}</Text>
+                    </div>
+                </div>
+                <div className={styles.orderInfoRow}>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Email:</Text>
+                        <Text>{order.userEmail}</Text>
+                    </div>
+                </div>
+                <div className={styles.orderInfoRow}>
+                    <div className={styles.orderInfoItem}>
+                        <Text type="secondary">Address:</Text>
+                        <Text>{order.address}, {order.city}</Text>
+                    </div>
+                </div>
+            </div>
+            <Divider />
+            <Text strong>Order Items</Text>
+            <Table
+                columns={orderColumns}
+                dataSource={order.items}
+                pagination={false}
+                rowKey={(item) => item.productId}
+                className={styles.orderTable}
             />
+        </>
+    );
+
+    const renderPersonalInfo = () => {
+        if (loading) {
+            return (
+                <div className={styles.loadingContainer}>
+                    <Spin size="large" />
+                </div>
+            );
+        }
+
+        if (isEditing) {
+            return (
+                <Form
+                    form={form}
+                    layout="vertical"
+                    className={styles.editForm}
+                >
+                    <Form.Item
+                        name="name"
+                        label="Name"
+                        rules={[{ required: true, message: 'Please enter your name' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="surname"
+                        label="Surname"
+                        rules={[{ required: true, message: 'Please enter your surname' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="phone"
+                        label="Phone"
+                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                            { required: true, message: 'Please enter your email' },
+                            { type: 'email', message: 'Please enter a valid email' }
+                        ]}
+                    >
+                        <Input disabled />
+                    </Form.Item>
+                    <Form.Item>
+                        <Space>
+                            <Button
+                                type="primary"
+                                icon={<SaveOutlined />}
+                                onClick={handleSave}
+                            >
+                                Save
+                            </Button>
+                            <Button
+                                icon={<CloseOutlined />}
+                                onClick={handleCancel}
+                            >
+                                Cancel
+                            </Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            );
+        }
+
+        return (
+            <>
+                <div className={styles.editButtonContainer}>
+                    <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={handleEdit}
+                    >
+                        Edit Profile
+                    </Button>
+                </div>
+                <Descriptions column={1} bordered className={styles.descriptions}>
+                    <Descriptions.Item label="Email">{profile?.email}</Descriptions.Item>
+                    <Descriptions.Item label="Phone">{profile?.phone}</Descriptions.Item>
+                    <Descriptions.Item label="Name">{profile?.name}</Descriptions.Item>
+                    <Descriptions.Item label="Surname">{profile?.surname}</Descriptions.Item>
+                </Descriptions>
+            </>
+        );
+    };
+
+    return (
+        <div className={styles.profilePage}>
+            <div className={styles.contentSection}>
+                <Title level={2}>My Profile</Title>
+                <div className={styles.profileCard}>
+                    <Tabs
+                        defaultActiveKey="1"
+                        tabPosition="left"
+                        className={styles.tabs}
+                        items={[
+                            {
+                                label: 'Personal Info',
+                                key: '1',
+                                children: (
+                                    <div className={styles.tabContent}>
+                                        {renderPersonalInfo()}
+                                    </div>
+                                ),
+                            },
+                            {
+                                label: 'Order History',
+                                key: '2',
+                                children: (
+                                    <div className={styles.tabContent}>
+                                        {loading ? (
+                                            <div className={styles.loadingContainer}>
+                                                <Spin size="large" />
+                                            </div>
+                                        ) : orders.length === 0 ? (
+                                            <Typography.Text>You have no orders yet.</Typography.Text>
+                                        ) : (
+                                            <Collapse
+                                                accordion
+                                                className={styles.orderCollapse}
+                                                items={orders.map((order) => ({
+                                                    key: order.orderNumber,
+                                                    label: `${order.orderNumber} - ${formatDate(order.createdAt)}`,
+                                                    children: renderOrderDetails(order),
+                                                }))}
+                                            />
+                                        )}
+                                    </div>
+                                ),
+                            },
+                        ]}
+                    />
+                </div>
+            </div>
         </div>
     );
 }

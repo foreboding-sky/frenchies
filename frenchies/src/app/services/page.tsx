@@ -1,10 +1,10 @@
 'use client';
 
 import { Typography, Card, Col, Row, Spin, Image } from 'antd';
-//import Image from 'next/image';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useEffect, useState } from 'react';
+import styles from './services.module.css';
 
 const { Title, Paragraph } = Typography;
 
@@ -54,34 +54,57 @@ export default function ServicesPage() {
     }, []);
 
     return (
-        <div className="services-page">
-            <Title level={1}>Our Services</Title>
-            {loading ? (
-                <Spin />
-            ) : (
-                <Row gutter={[16, 16]}>
-                    {services.map((service) => (
-                        <Col key={service.id} xs={24} sm={12} lg={8}>
-                            <Card
-                                cover={
-                                    <Image
-                                        src={service.image}
-                                        alt={service.title}
-                                        width={350}
-                                        height={200}
-                                    //objectFit="cover"
-                                    />
-                                }
-                                title={service.title}
-                                variant="outlined"
-                            >
-                                <Paragraph>{service.description}</Paragraph>
-                                <Paragraph><strong>Price:</strong> {service.price}</Paragraph>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            )}
+        <div className={styles.servicesPage}>
+            <div className={styles.heroSection}>
+                <Title level={1} className={styles.title}>Our Services</Title>
+                <Paragraph className={styles.subtitle}>
+                    Experience our range of premium beauty services, each designed to enhance your natural beauty
+                    and provide you with a luxurious experience.
+                </Paragraph>
+            </div>
+
+            <div className={styles.contentSection}>
+                {loading ? (
+                    <div className={styles.loadingContainer}>
+                        <Spin size="large" />
+                    </div>
+                ) : (
+                    <Row gutter={[24, 24]} className={styles.servicesGrid}>
+                        {services.map((service) => (
+                            <Col key={service.id} xs={24} sm={12} lg={8}>
+                                <Card
+                                    hoverable
+                                    className={styles.serviceCard}
+                                    cover={
+                                        <div className={styles.imageContainer}>
+                                            <Image
+                                                alt={service.title}
+                                                src={service.image || 'https://via.placeholder.com/400x240'}
+                                                height={200}
+                                                width="100%"
+                                                style={{ objectFit: 'cover' }}
+                                                preview={false}
+                                            />
+                                        </div>
+                                    }
+                                >
+                                    <div className={styles.cardContent}>
+                                        <Title level={4} className={styles.cardTitle}>
+                                            {service.title}
+                                        </Title>
+                                        <Paragraph className={styles.description}>
+                                            {service.description}
+                                        </Paragraph>
+                                        <Paragraph className={styles.price}>
+                                            ${service.price}
+                                        </Paragraph>
+                                    </div>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+            </div>
         </div>
     );
 }

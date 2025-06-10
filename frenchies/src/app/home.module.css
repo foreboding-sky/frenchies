@@ -1,33 +1,135 @@
 .container {
-    padding: 2rem;
+    padding: 0;
     background-color: var(--bg-color);
     color: var(--text-color);
 }
 
 .hero {
-    text-align: center;
-    margin-bottom: 3rem;
+    position: relative;
+    margin-bottom: 4rem;
+}
+
+.bannerContainer {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/6;
+    overflow: hidden;
 }
 
 .banner {
     width: 100%;
-    max-height: 400px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 16px;
-    margin-bottom: 1rem;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    color: white;
 }
 
 .title {
-    color: var(--accent-color);
-    font-size: 3rem;
+    color: white !important;
+    font-size: 3.5rem !important;
+    margin-bottom: 1rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
-    color: var(--text-color);
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    color: white !important;
+    font-size: 1.4rem !important;
+    margin-bottom: 2rem !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+}
+
+.ctaButton {
+    height: 48px;
+    padding: 0 32px;
+    font-size: 1.1rem;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .services {
-    margin-top: 4rem;
+    padding: 4rem 2rem;
+    background-color: white;
+}
+
+.sectionTitle {
+    text-align: center;
+    margin-bottom: 1rem !important;
+    color: var(--text-color) !important;
+}
+
+.sectionSubtitle {
+    text-align: center;
+    font-size: 1.2rem !important;
+    color: #666 !important;
+    margin-bottom: 3rem !important;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.serviceCards {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.serviceCard {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.serviceCard:hover {
+    transform: translateY(-5px);
+}
+
+.cardIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    background-color: #FDF6F0;
+    font-size: 48px;
+    color: #8B5A2B;
+}
+
+.cardIcon :global(.anticon) {
+    font-size: 48px;
+}
+
+@media (max-width: 768px) {
+    .bannerContainer {
+        aspect-ratio: 16/9;
+    }
+
+    .title {
+        font-size: 2.5rem !important;
+    }
+
+    .subtitle {
+        font-size: 1.2rem !important;
+    }
+
+    .services {
+        padding: 2rem 1rem;
+    }
 }

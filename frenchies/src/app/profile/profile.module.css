@@ -1,0 +1,201 @@
+.profilePage {
+    min-height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 2rem;
+}
+
+.contentSection {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.profileCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.tabs {
+    min-height: 500px;
+}
+
+.tabContent {
+    padding: 2rem;
+}
+
+.editButtonContainer {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.editForm {
+    max-width: 500px;
+}
+
+.editForm :global(.ant-form-item) {
+    margin-bottom: 1.5rem;
+}
+
+.editForm :global(.ant-form-item-label) {
+    padding-bottom: 0.5rem;
+}
+
+.editForm :global(.ant-form-item-label > label) {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.descriptions {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.descriptions :global(.ant-descriptions-item-label) {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.descriptions :global(.ant-descriptions-item-content) {
+    color: var(--text-secondary);
+}
+
+.orderDetails {
+    margin-bottom: 1.5rem;
+}
+
+.orderDetails :global(.ant-descriptions-item-label) {
+    width: 140px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.orderDetails :global(.ant-descriptions-item-content) {
+    color: var(--text-secondary);
+}
+
+.orderCollapse {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.orderCollapse :global(.ant-collapse-item) {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.orderCollapse :global(.ant-collapse-header) {
+    font-weight: 500;
+}
+
+.orderInfo {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.orderInfoRow {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.orderInfoRow:last-child {
+    margin-bottom: 0;
+}
+
+.orderInfoItem {
+    flex: 1;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.orderInfoItem :global(.ant-typography) {
+    margin: 0;
+}
+
+.orderStatus {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.statusPending {
+    background-color: #fff7e6;
+    color: #d46b08;
+}
+
+.statusCompleted {
+    background-color: #f6ffed;
+    color: #389e0d;
+}
+
+.statusCancelled {
+    background-color: #fff1f0;
+    color: #cf1322;
+}
+
+.paymentPending {
+    background-color: #fff7e6;
+    color: #d46b08;
+}
+
+.paymentCompleted {
+    background-color: #f6ffed;
+    color: #389e0d;
+}
+
+.paymentFailed {
+    background-color: #fff1f0;
+    color: #cf1322;
+}
+
+.orderTable {
+    margin-top: 1rem;
+}
+
+.orderTable :global(.ant-table-thead > tr > th) {
+    background-color: #fafafa;
+    font-weight: 500;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+@media (max-width: 768px) {
+    .profilePage {
+        padding: 1rem;
+    }
+
+    .tabContent {
+        padding: 1rem;
+    }
+
+    .editForm {
+        max-width: 100%;
+    }
+
+    .orderDetails :global(.ant-descriptions-item-label) {
+        width: 100px;
+    }
+
+    .orderInfoRow {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .orderInfoItem {
+        width: 100%;
+    }
+}

@@ -1,21 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { useParams, useRouter } from 'next/navigation';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Card, Typography, Spin, Tag, Image, Button } from 'antd';
-import Link from 'next/link';
+import { Typography, Spin, Image, Button } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import AddToCartButton from '@/components/AddToCartButton';
 import { Product } from '@/types/product';
+import styles from './product.module.css';
 
-const { Title, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 export default function ProductDetailsPage() {
     const { productId } = useParams();
+    const router = useRouter();
     const [product, setProduct] = useState<Product | null>(null);
     const [categoryName, setCategoryName] = useState<string>('');
     const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState(0);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -48,36 +51,104 @@ export default function ProductDetailsPage() {
         fetchProduct();
     }, [productId]);
 
-    if (loading) return <Spin size="large" />;
+    if (loading) {
+        return (
+            <div className={styles.productPage}>
+                <div className={styles.loadingContainer}>
+                    <Spin size="large" />
+                </div>
+            </div>
+        );
+    }
 
-    if (!product) return <p>Product not found.</p>;
+    if (!product) {
+        return (
+            <div className={styles.productPage}>
+                <div className={styles.contentSection}>
+                    <Text>Product not found.</Text>
+                </div>
+            </div>
+        );
+    }
+
+    const discountedPrice = product.discount
+        ? product.price - (product.price * product.discount / 100)
+        : product.price;
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow">
-            <Link href="/products">
-                <Button type="link">← Back to Products</Button>
-            </Link>
-            <Title>{product.title}</Title>
-            <Image.PreviewGroup>
-                {product.images?.map((url: string, idx: number) => (
-                    <Image key={idx} src={url} width={200} className="mr-3 mb-3" />
-                ))}
-            </Image.PreviewGroup>
-            <Paragraph>Title: {product.title}</Paragraph>
-            <Paragraph>Stock: {product.stock}</Paragraph>
-            <Paragraph strong>Price: ${product.price}</Paragraph>
-            {product.discount &&
-                <>
-                    <Paragraph>Discount: {product.discount}%</Paragraph>
-                    <Paragraph strong>Total price: ${(product.price - product.price * product.discount / 100).toFixed(2)}</Paragraph>
-                </>}
-            <AddToCartButton product={product} />
-            <Paragraph>Category: {categoryName}</Paragraph>
-            <Paragraph>{product.description}</Paragraph>
-            <div className="mt-4">
-                {product.tags?.map((tag: string, i: number) => (
-                    <Tag key={i}>{tag}</Tag>
-                ))}
+        <div className={styles.productPage}>
+            <div className={styles.contentSection}>
+                <div className={styles.productContent}>
+                    <div className={styles.imageSection}>
+                        <div className={styles.navigation}>
+                            <Button
+                                type="text"
+                                icon={<ArrowLeftOutlined />}
+                                onClick={() => router.back()}
+                                className={styles.navButton}
+                            />
+                        </div>
+                        <Image
+                            src={product.images?.[selectedImage] || 'https://via.placeholder.com/400x400'}
+                            alt={product.title}
+                            className={styles.mainImage}
+                            preview={false}
+                        />
+                        {product.images && product.images.length > 1 && (
+                            <div className={styles.thumbnailContainer}>
+                                {product.images.map((url, index) => (
+                                    <Image
+                                        key={index}
+                                        src={url}
+                                        alt={`${product.title} thumbnail ${index + 1}`}
+                                        className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ''}`}
+                                        onClick={() => setSelectedImage(index)}
+                                        preview={false}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className={styles.infoSection}>
+                        <Title level={2} className={styles.title}>{product.title}</Title>
+
+                        <div className={styles.priceSection}>
+                            <Text className={styles.price}>${discountedPrice.toFixed(2)}</Text>
+                            {product.discount && (
+                                <>
+                                    <Text className={styles.originalPrice}>${product.price.toFixed(2)}</Text>
+                                    <Text className={styles.discount}>{product.discount}% OFF</Text>
+                                </>
+                            )}
+                        </div>
+
+                        <Paragraph className={styles.description}>{product.description}</Paragraph>
+
+                        <div className={styles.metaInfo}>
+                            <div className={styles.metaItem}>
+                                <Text className={styles.metaLabel}>Category</Text>
+                                <Text className={styles.metaValue}>{categoryName}</Text>
+                            </div>
+                            <div className={styles.metaItem}>
+                                <Text className={styles.metaLabel}>Stock</Text>
+                                <Text className={styles.metaValue}>{product.stock} units</Text>
+                            </div>
+                        </div>
+
+                        {product.tags && product.tags.length > 0 && (
+                            <div className={styles.tags}>
+                                {product.tags.map((tag, index) => (
+                                    <span key={index} className={styles.tag}>{tag}</span>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className={styles.actions}>
+                            <AddToCartButton product={product} />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -2,34 +2,45 @@ import { theme } from 'antd';
 import type { ThemeConfig } from 'antd/es/config-provider/context';
 
 export const frenchiesTheme: ThemeConfig = {
-    algorithm: theme.defaultAlgorithm, // change to darkAlgorithm if needed
+    algorithm: theme.defaultAlgorithm,
     token: {
-        colorPrimary: '#CD9BA7',         // Accent
-        colorBgBase: '#EBE4DE',          // Background
-        colorTextBase: '#744010',        // Font color
-        colorText: '#744010',            // General text
-        colorBorder: '#D6CFC9',          // Soft border
-        fontFamily: 'Georgia, serif',    // Elegant serif font
-        borderRadius: 8,                 // Softer curves
-
+        colorPrimary: '#8B5A2B',         // Rich brown as primary
+        colorBgBase: '#FDF6F0',          // Soft cream background
+        colorTextBase: '#2C1810',        // Deep brown text
+        colorText: '#2C1810',            // Deep brown text
+        colorBorder: '#E8D5C4',          // Warm border color
+        fontFamily: '"Playfair Display", Georgia, serif', // More elegant font
+        borderRadius: 6,                 // Subtle curves
+        colorBgContainer: '#FFFFFF',     // White container background
+        colorBgElevated: '#FFFFFF',      // White elevated background
+        colorBgLayout: '#FDF6F0',        // Layout background
     },
     components: {
         Layout: {
-            headerBg: '#EBE4DE',
-            headerColor: '#744010',
+            headerBg: '#FFFFFF',
+            headerColor: '#2C1810',
+            bodyBg: '#FDF6F0',
+            footerBg: '#FFFFFF',
         },
         Menu: {
-            itemColor: '#744010',
-            itemSelectedColor: '#CD9BA7',
-            itemHoverColor: '#CD9BA7',
-            itemBg: '#EBE4DE',
-            itemSelectedBg: '#f5e8e4',
+            itemColor: '#2C1810',
+            itemSelectedColor: '#8B5A2B',
+            itemHoverColor: '#8B5A2B',
+            itemBg: '#FFFFFF',
+            itemSelectedBg: '#FDF6F0',
+            itemHoverBg: '#FDF6F0',
+            itemActiveBg: '#FDF6F0',
         },
         Button: {
-            colorPrimary: '#CD9BA7',
+            colorPrimary: '#8B5A2B',
+            colorPrimaryHover: '#6B4423',
+            colorPrimaryActive: '#4A2F16',
+            borderRadius: 6,
         },
         Card: {
-            colorPrimary: '#EBE4DE',
+            colorBgContainer: '#FFFFFF',
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
         },
     },
 };

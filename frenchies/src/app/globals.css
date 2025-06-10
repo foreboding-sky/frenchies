@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --bg-color: #EBE4DE;
-  --text-color: #744010;
-  --accent-color: #CD9BA7;
+  --bg-color: #FDF6F0;
+  --text-color: #2C1810;
+  --accent-color: #8B5A2B;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,10 +17,25 @@ body {
   background: var(--bg-color);
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: Georgia, sans-serif;
+  font-family: "Playfair Display", Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .ant-card {
-  background-color: #f5f0eb !important;
-  border-color: #744010 !important;
+  background-color: #FFFFFF !important;
+  border-color: #E8D5C4 !important;
+}
+
+/* Add smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improve text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
