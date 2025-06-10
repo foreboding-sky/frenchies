@@ -53,7 +53,6 @@ export default function HomePage() {
         <Row gutter={[32, 32]} className={styles.serviceCards}>
           <Col xs={24} sm={12} md={8}>
             <Card
-              hoverable
               className={styles.serviceCard}
               cover={<div className={styles.cardIcon}><ScissorOutlined /></div>}
             >
@@ -65,7 +64,6 @@ export default function HomePage() {
           </Col>
           <Col xs={24} sm={12} md={8}>
             <Card
-              hoverable
               className={styles.serviceCard}
               cover={<div className={styles.cardIcon}><SmileOutlined /></div>}
             >
@@ -77,7 +75,6 @@ export default function HomePage() {
           </Col>
           <Col xs={24} sm={12} md={8}>
             <Card
-              hoverable
               className={styles.serviceCard}
               cover={<div className={styles.cardIcon}><SmileOutlined /></div>}
             >

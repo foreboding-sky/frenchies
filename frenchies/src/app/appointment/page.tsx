@@ -1,12 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Form, Input, DatePicker, Button, Select, App } from 'antd';
+import { Form, Input, DatePicker, Button, Select, App, Typography } from 'antd';
 import { useAuth } from '@/lib/auth';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import styles from './appointment.module.css';
 
 const { TextArea } = Input;
+const { Title, Text } = Typography;
 
 export default function AppointmentPage() {
     const [submitting, setSubmitting] = useState(false);
@@ -14,6 +18,7 @@ export default function AppointmentPage() {
     const { message } = App.useApp();
     const [form] = Form.useForm();
     const { user } = useAuth();
+    const router = useRouter();
     const [initialName, setInitialName] = useState('');
     const [initialPhone, setInitialPhone] = useState('');
 
@@ -76,6 +81,8 @@ export default function AppointmentPage() {
                 createdAt: serverTimestamp(),
             });
             message.success('Request submitted! Our manager will contact you soon.');
+            form.resetFields();
+            router.push('/');
         } catch (err) {
             console.error('Failed to submit:', err);
             message.error('Submission failed. Please try again.');
@@ -85,39 +92,87 @@ export default function AppointmentPage() {
     };
 
     return (
-        <div className="max-w-xl mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">Book an Appointment</h2>
-            <Form layout="vertical" onFinish={handleFinish} form={form}>
-                <Form.Item name="name" label="Your Name" rules={[{ required: true }]}>
-                    <Input placeholder="Enter your full name" />
-                </Form.Item>
+        <div className={styles.appointmentPage}>
+            <div className={styles.contentSection}>
+                <div className={styles.navigation}>
+                    <Button
+                        type="default"
+                        icon={<ArrowLeftOutlined />}
+                        className={styles.navButton}
+                        onClick={() => router.push('/')}
+                    >
+                        Back
+                    </Button>
+                </div>
+                <div className={styles.header}>
+                    <Title level={2} className={styles.title}>Book an Appointment</Title>
+                    <Text className={styles.subtitle}>Schedule your visit with our expert groomers</Text>
+                </div>
 
-                <Form.Item name="phone" label="Phone Number" rules={[{ required: true }]}>
-                    <Input placeholder="Enter your phone number" />
-                </Form.Item>
+                <Form
+                    layout="vertical"
+                    onFinish={handleFinish}
+                    form={form}
+                    className={styles.form}
+                >
+                    <Form.Item
+                        name="name"
+                        label="Your Name"
+                        rules={[{ required: true, message: 'Please enter your name' }]}
+                    >
+                        <Input placeholder="Enter your full name" />
+                    </Form.Item>
 
-                <Form.Item name="service" label="Select Service" rules={[{ required: true }]}>
-                    <Select placeholder="Choose a service">
-                        {services.map((service) => (
-                            <Select.Option key={service.id} value={service.title}>
-                                {service.title}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
+                    <Form.Item
+                        name="phone"
+                        label="Phone Number"
+                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                    >
+                        <Input placeholder="Enter your phone number" />
+                    </Form.Item>
 
-                <Form.Item name="datetime" label="Preferred Date & Time" rules={[{ required: true }]}>
-                    <DatePicker showTime format="YYYY-MM-DD HH:mm" />
-                </Form.Item>
+                    <Form.Item
+                        name="service"
+                        label="Select Service"
+                        rules={[{ required: true, message: 'Please select a service' }]}
+                    >
+                        <Select placeholder="Choose a service">
+                            {services.map((service) => (
+                                <Select.Option key={service.id} value={service.title}>
+                                    {service.title}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
 
-                <Form.Item name="comment" label="Comment (optional)">
-                    <TextArea rows={4} />
-                </Form.Item>
+                    <Form.Item
+                        name="datetime"
+                        label="Preferred Date & Time"
+                        rules={[{ required: true, message: 'Please select date and time' }]}
+                    >
+                        <DatePicker showTime format="YYYY-MM-DD HH:mm" />
+                    </Form.Item>
 
-                <Button type="primary" htmlType="submit" loading={submitting}>
-                    Submit
-                </Button>
-            </Form>
+                    <Form.Item
+                        name="comment"
+                        label="Additional Comments"
+                    >
+                        <TextArea
+                            rows={4}
+                            placeholder="Any special requests or information we should know?"
+                        />
+                    </Form.Item>
+
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={submitting}
+                        className={styles.submitButton}
+                    >
+                        Book Appointment
+                    </Button>
+                </Form>
+            </div>
         </div>
     );
 }

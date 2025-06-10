@@ -15,22 +15,16 @@
 }
 
 .navigation {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 10;
+    padding: 1rem;
 }
 
 .navButton {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    border-radius: 50% !important;
-    width: 40px !important;
-    height: 40px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    height: 36px;
+    font-size: 1rem;
 }
 
 .navButton:hover {

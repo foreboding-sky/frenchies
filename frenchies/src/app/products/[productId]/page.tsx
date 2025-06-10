@@ -78,16 +78,18 @@ export default function ProductDetailsPage() {
     return (
         <div className={styles.productPage}>
             <div className={styles.contentSection}>
+                <div className={styles.navigation}>
+                    <Button
+                        type="default"
+                        icon={<ArrowLeftOutlined />}
+                        className={styles.navButton}
+                        onClick={() => router.back()}
+                    >
+                        Back
+                    </Button>
+                </div>
                 <div className={styles.productContent}>
                     <div className={styles.imageSection}>
-                        <div className={styles.navigation}>
-                            <Button
-                                type="text"
-                                icon={<ArrowLeftOutlined />}
-                                onClick={() => router.back()}
-                                className={styles.navButton}
-                            />
-                        </div>
                         <Image
                             src={product.images?.[selectedImage] || 'https://via.placeholder.com/400x400'}
                             alt={product.title}

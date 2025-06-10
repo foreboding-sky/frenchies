@@ -1,13 +1,15 @@
 'use client';
 
 import React from 'react';
-import { App, Layout, Button, Space, Typography, InputNumber, Row, Col, Card, Avatar } from 'antd';
+import { App, Button, Space, Typography, InputNumber, Image } from 'antd';
 import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '@/lib/auth';
 import { useCartItems } from '@/hooks/useCartItems';
+import styles from './cart.module.css';
+import Link from 'next/link';
 
 const { Title, Text } = Typography;
 
@@ -32,7 +34,6 @@ const CartPage = () => {
         }
     };
 
-    // Remove cart item from Firestore
     const handleRemoveItem = async (productId: string) => {
         try {
             if (!user) return;
@@ -45,71 +46,99 @@ const CartPage = () => {
         }
     };
 
-    // Calculate total price
-    const calculateTotalPrice = () => {
-        return cartItems.reduce((total, item) => total + item.priceAtTime * item.quantity, 0);
+    const formatPrice = (price: number | string) => {
+        return Number(price).toFixed(2);
+    };
+
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + Number(item.priceAtTime) * item.quantity, 0);
     };
 
     return (
-        <Layout style={{ padding: '20px' }}>
-            <Title level={2}>Shopping Cart</Title>
-            {loading ? (
-                <Text>Loading...</Text>
-            ) : (
-                <>
-                    {cartItems.length === 0 ? (
-                        <Text>Your cart is empty</Text>
-                    ) : (
-                        <Row gutter={[16, 16]}>
-                            {cartItems.map((item) => (
-                                <Col span={8} key={item.productId}>
-                                    <Card
-                                        hoverable
-                                        cover={<img alt={item.productTitle} src={item.image} />}
-                                        actions={[
-                                            <Button
-                                                type="link"
-                                                onClick={() => handleRemoveItem(item.productId)}
-                                                icon={<DeleteOutlined />}
-                                            >
-                                                Remove
-                                            </Button>,
-                                        ]}
-                                    >
-                                        <Card.Meta
-                                            avatar={<Avatar src={item.image} />}
-                                            title={item.productTitle}
-                                            description={`$${item.priceAtTime}`}
-                                        />
-                                        <Space style={{ marginTop: 16 }}>
-                                            <Text>Quantity:</Text>
-                                            <InputNumber
-                                                min={1}
-                                                value={item.quantity}
-                                                onChange={(value) => handleUpdateQuantity(item.productId, value!)}
-                                            />
-                                        </Space>
-                                    </Card>
-                                </Col>
-                            ))}
-                        </Row>
-                    )}
+        <div className={styles.cartPage}>
+            <div className={styles.contentSection}>
+                <div className={styles.cartHeader}>
+                    <Title level={2} className={styles.cartTitle}>Shopping Cart</Title>
+                </div>
 
-                    {cartItems.length > 0 && (
-                        <Space style={{ marginTop: 24 }} direction="vertical" size="middle" align="center">
-                            <Title level={3}>Total: ${calculateTotalPrice().toFixed(2)}</Title>
+                {loading ? (
+                    <div className={styles.cartEmpty}>
+                        <Text>Loading...</Text>
+                    </div>
+                ) : cartItems.length === 0 ? (
+                    <div className={styles.cartEmpty}>
+                        <ShoppingCartOutlined className={styles.cartEmptyIcon} />
+                        <Text className={styles.cartEmptyText}>Your cart is empty</Text>
+                        <Button type="primary" onClick={() => router.push('/products')}>
+                            Continue Shopping
+                        </Button>
+                    </div>
+                ) : (
+                    <>
+                        <div className={styles.cartItems}>
+                            {cartItems.map((item) => (
+                                <div key={item.productId} className={styles.cartItem}>
+                                    <Link href={`/products/${item.productId}`} className={styles.itemImageLink}>
+                                        <Image
+                                            src={item.image}
+                                            alt={item.productTitle}
+                                            className={styles.itemImage}
+                                            preview={false}
+                                        />
+                                    </Link>
+                                    <div className={styles.itemDetails}>
+                                        <Link href={`/products/${item.productId}`} className={styles.itemTitleLink}>
+                                            <h3 className={styles.itemTitle}>{item.productTitle}</h3>
+                                        </Link>
+                                        <div className={styles.itemPrice}>${formatPrice(item.priceAtTime)}</div>
+                                    </div>
+                                    <div className={styles.itemQuantity}>
+                                        <Text className={styles.quantityLabel}>Quantity:</Text>
+                                        <InputNumber
+                                            min={1}
+                                            value={item.quantity}
+                                            onChange={(value) => handleUpdateQuantity(item.productId, value!)}
+                                        />
+                                    </div>
+                                    <Button
+                                        type="text"
+                                        className={styles.removeButton}
+                                        onClick={() => handleRemoveItem(item.productId)}
+                                        icon={<DeleteOutlined />}
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className={styles.cartSummary}>
                             <Button
-                                type="primary"
-                                icon={<ShoppingCartOutlined />}
-                                onClick={() => router.push('/checkout')}
+                                type="default"
+                                className={styles.backButton}
+                                onClick={() => router.push('/products')}
                             >
-                                Proceed to Checkout
+                                Back to Shopping
                             </Button>
-                        </Space>
-                    )}
-                </>
-            )}
-        </Layout>
+                            <div className={styles.summaryContent}>
+                                <div className={styles.summaryRow}>
+                                    <Text>Total:</Text>
+                                    <Text>${formatPrice(calculateTotal())}</Text>
+                                </div>
+                                <Button
+                                    type="primary"
+                                    icon={<ShoppingCartOutlined />}
+                                    onClick={() => router.push('/checkout')}
+                                    className={styles.checkoutButton}
+                                >
+                                    Proceed to Checkout
+                                </Button>
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
     );
 };
 

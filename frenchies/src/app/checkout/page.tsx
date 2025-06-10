@@ -8,6 +8,8 @@ import { useAuth } from '@/lib/auth';
 import { useCartItems } from '@/hooks/useCartItems';
 import { App, Input, Select, Button, Typography, Form, Spin } from 'antd';
 import { Order, OrderItem } from '@/types/order';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import styles from './checkout.module.css';
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -113,78 +115,111 @@ export default function CheckoutPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center p-10">
-                <Spin size="large" />
+            <div className={styles.checkoutPage}>
+                <div className={styles.contentSection}>
+                    <div className="flex justify-center p-10">
+                        <Spin size="large" />
+                    </div>
+                </div>
             </div>
         );
     }
 
     if (cartItems.length === 0) {
-        return <Typography.Text>Your cart is empty.</Typography.Text>;
+        return (
+            <div className={styles.checkoutPage}>
+                <div className={styles.contentSection}>
+                    <div className={styles.emptyCart}>
+                        <Typography.Text>Your cart is empty.</Typography.Text>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <Typography.Title level={2}>Checkout</Typography.Title>
-
-            <Form form={form} layout="vertical" onFinish={handleFinish}>
-                <Form.Item
-                    label="Name"
-                    name="name"
-                    rules={[{ required: true, message: 'Please enter your name' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Surname"
-                    name="surname"
-                    rules={[{ required: true, message: 'Please enter your surname' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Phone"
-                    name="phone"
-                    rules={[{ required: true, message: 'Please enter your surname' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Address"
-                    name="address"
-                    rules={[{ required: true, message: 'Please enter your address' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="City"
-                    name="city"
-                    rules={[{ required: true, message: 'Please enter your city' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Payment Method"
-                    name="paymentMethod"
-                    rules={[{ required: true, message: 'Select a payment method' }]}
-                >
-                    <Select placeholder="Select payment method">
-                        <Select.Option value="Cash on delivery">Cash on delivery</Select.Option>
-                        <Select.Option value="Card">Card</Select.Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={submitting}>
-                        Place Order
+        <div className={styles.checkoutPage}>
+            <div className={styles.contentSection}>
+                <div className={styles.navigation}>
+                    <Button
+                        type="default"
+                        icon={<ArrowLeftOutlined />}
+                        className={styles.navButton}
+                        onClick={() => router.push('/cart')}
+                    >
+                        Back
                     </Button>
-                </Form.Item>
-            </Form>
+                </div>
+                <div className={styles.header}>
+                    <Typography.Title level={2} className={styles.title}>Checkout</Typography.Title>
+                    <Typography.Text className={styles.subtitle}>Complete your order details</Typography.Text>
+                </div>
+
+                <Form form={form} layout="vertical" onFinish={handleFinish} className={styles.form}>
+                    <Form.Item
+                        label="Name"
+                        name="name"
+                        rules={[{ required: true, message: 'Please enter your name' }]}
+                        className={styles.formItem}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Surname"
+                        name="surname"
+                        rules={[{ required: true, message: 'Please enter your surname' }]}
+                        className={styles.formItem}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Phone"
+                        name="phone"
+                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                        className={styles.formItem}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Address"
+                        name="address"
+                        rules={[{ required: true, message: 'Please enter your address' }]}
+                        className={styles.formItem}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="City"
+                        name="city"
+                        rules={[{ required: true, message: 'Please enter your city' }]}
+                        className={styles.formItem}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Payment Method"
+                        name="paymentMethod"
+                        rules={[{ required: true, message: 'Select a payment method' }]}
+                        className={styles.formItem}
+                    >
+                        <Select placeholder="Select payment method">
+                            <Select.Option value="Cash on delivery">Cash on delivery</Select.Option>
+                            <Select.Option value="Card">Card</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={submitting} className={styles.submitButton}>
+                            Place Order
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
         </div>
     );
 }
