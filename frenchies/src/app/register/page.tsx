@@ -81,7 +81,7 @@ export default function RegisterPage() {
                             { min: 6, message: 'Password must be at least 6 characters' },
                             { max: 50, message: 'Password cannot exceed 50 characters' },
                             {
-                                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+                                pattern: /^(?=.*[\p{Ll}])(?=.*[\p{Lu}])(?=.*\d)[\p{L}\d]{6,}$/u,
                                 message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
                             }
                         ]}

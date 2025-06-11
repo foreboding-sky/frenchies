@@ -88,6 +88,23 @@
     text-decoration: underline;
 }
 
+.forgotPassword {
+    text-align: right;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.forgotPassword :global(.ant-btn-link) {
+    padding: 0;
+    height: auto;
+    color: var(--primary-color);
+}
+
+.forgotPassword :global(.ant-btn-link:hover) {
+    color: var(--primary-color-hover);
+    text-decoration: underline;
+}
+
 @media (max-width: 768px) {
     .contentSection {
         padding: 1.5rem;

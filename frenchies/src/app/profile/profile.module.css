@@ -24,10 +24,18 @@
     padding: 2rem;
 }
 
-.editButtonContainer {
+.buttonContainer {
     margin-bottom: 1.5rem;
     display: flex;
+    gap: 1rem;
     justify-content: flex-end;
+}
+
+.editButton,
+.passwordButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .editForm {

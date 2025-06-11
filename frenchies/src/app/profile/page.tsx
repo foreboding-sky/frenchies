@@ -27,9 +27,13 @@ import {
     Form,
     Input,
     Space,
+    Modal,
 } from 'antd';
-import { EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { EditOutlined, SaveOutlined, CloseOutlined, LockOutlined } from '@ant-design/icons';
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import styles from './profile.module.css';
+import { useRouter } from 'next/navigation';
 
 import { Order } from '@/types/order';
 import { UserProfile } from '@/types/user';
@@ -38,16 +42,27 @@ const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 export default function ProfilePage() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
+    const router = useRouter();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+    const [passwordForm] = Form.useForm();
     const [form] = Form.useForm();
     const { message } = App.useApp();
+    const [changingPassword, setChangingPassword] = useState(false);
 
     useEffect(() => {
-        if (!user) return;
+        // Wait for auth to initialize
+        if (authLoading) return;
+
+        // If auth is initialized and there's no user, redirect
+        if (!user) {
+            router.push('/');
+            return;
+        }
 
         const fetchData = async () => {
             try {
@@ -81,7 +96,20 @@ export default function ProfilePage() {
         };
 
         fetchData();
-    }, [user]);
+    }, [user, authLoading, router]);
+
+    // Show loading state while auth is initializing
+    if (authLoading) {
+        return (
+            <div className={styles.profilePage}>
+                <div className={styles.contentSection}>
+                    <div className={styles.loadingContainer}>
+                        <Spin size="large" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -103,6 +131,38 @@ export default function ProfilePage() {
         } catch (error) {
             console.error('Failed to update profile:', error);
             message.error('Could not update profile');
+        }
+    };
+
+    const handlePasswordChange = async (values: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
+        if (!user) return;
+
+        if (values.newPassword !== values.confirmPassword) {
+            message.error('New passwords do not match');
+            return;
+        }
+
+        setChangingPassword(true);
+        try {
+            // Reauthenticate user before changing password
+            const credential = EmailAuthProvider.credential(user.email!, values.currentPassword);
+            await reauthenticateWithCredential(user, credential);
+
+            // Change password
+            await updatePassword(user, values.newPassword);
+
+            message.success('Password changed successfully');
+            setIsPasswordModalVisible(false);
+            passwordForm.resetFields();
+        } catch (error: any) {
+            console.error('Failed to change password:', error);
+            if (error.code === 'auth/wrong-password') {
+                message.error('Current password is incorrect');
+            } else {
+                message.error('Failed to change password. Please try again.');
+            }
+        } finally {
+            setChangingPassword(false);
         }
     };
 
@@ -302,13 +362,21 @@ export default function ProfilePage() {
 
         return (
             <>
-                <div className={styles.editButtonContainer}>
+                <div className={styles.buttonContainer}>
                     <Button
                         type="primary"
                         icon={<EditOutlined />}
                         onClick={handleEdit}
+                        className={styles.editButton}
                     >
                         Edit Profile
+                    </Button>
+                    <Button
+                        icon={<LockOutlined />}
+                        onClick={() => setIsPasswordModalVisible(true)}
+                        className={styles.passwordButton}
+                    >
+                        Change Password
                     </Button>
                 </div>
                 <Descriptions column={1} bordered className={styles.descriptions}>
@@ -317,6 +385,87 @@ export default function ProfilePage() {
                     <Descriptions.Item label="Name">{profile?.name}</Descriptions.Item>
                     <Descriptions.Item label="Surname">{profile?.surname}</Descriptions.Item>
                 </Descriptions>
+
+                <Modal
+                    title="Change Password"
+                    open={isPasswordModalVisible}
+                    onCancel={() => {
+                        setIsPasswordModalVisible(false);
+                        passwordForm.resetFields();
+                    }}
+                    footer={null}
+                >
+                    <Form
+                        form={passwordForm}
+                        layout="vertical"
+                        onFinish={handlePasswordChange}
+                    >
+                        <Form.Item
+                            name="currentPassword"
+                            label="Current Password"
+                            rules={[
+                                { required: true, message: 'Please enter your current password' },
+                                { min: 6, message: 'Password must be at least 6 characters' }
+                            ]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="newPassword"
+                            label="New Password"
+                            rules={[
+                                { required: true, message: 'Please enter your new password' },
+                                { min: 6, message: 'Password must be at least 6 characters' },
+                                {
+                                    pattern: /^(?=.*[\p{Ll}])(?=.*[\p{Lu}])(?=.*\d)[\p{L}\d]{6,}$/u,
+                                    message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+                                }
+                            ]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="confirmPassword"
+                            label="Confirm New Password"
+                            dependencies={['newPassword']}
+                            rules={[
+                                { required: true, message: 'Please confirm your new password' },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('newPassword') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('The two passwords do not match'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={changingPassword}
+                                >
+                                    Change Password
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setIsPasswordModalVisible(false);
+                                        passwordForm.resetFields();
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </Space>
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </>
         );
     };
