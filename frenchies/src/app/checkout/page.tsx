@@ -46,12 +46,14 @@ export default function CheckoutPage() {
     }, [user]);
 
     useEffect(() => {
-        form.setFieldsValue({
-            name: initialName,
-            surname: initialSurname,
-            phone: initialPhone,
-        });
-    }, [initialName, initialSurname, initialPhone]);
+        if (initialName || initialSurname || initialPhone) {
+            form.setFieldsValue({
+                name: initialName,
+                surname: initialSurname,
+                phone: initialPhone,
+            });
+        }
+    }, [initialName, initialSurname, initialPhone, form]);
 
     const handleFinish = async (values: any) => {
         if (!user) return;
@@ -155,7 +157,17 @@ export default function CheckoutPage() {
                     <Typography.Text className={styles.subtitle}>Complete your order details</Typography.Text>
                 </div>
 
-                <Form form={form} layout="vertical" onFinish={handleFinish} className={styles.form}>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleFinish}
+                    className={styles.form}
+                    initialValues={{
+                        name: initialName,
+                        surname: initialSurname,
+                        phone: initialPhone
+                    }}
+                >
                     <Form.Item
                         label="Name"
                         name="name"

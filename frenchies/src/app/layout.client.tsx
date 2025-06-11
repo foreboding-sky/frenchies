@@ -8,17 +8,18 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import CartBadge from '@/components/CartBadge';
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined, DashboardOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { AntdConfigProvider } from '@/lib/antd-config';
+import { UserProfile } from '@/types/user';
 
 const { Header, Content, Footer } = Layout;
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
     const router = useRouter();
-    const [userProfile, setUserProfile] = useState<{ name: string; surname: string } | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -29,11 +30,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                 const userSnap = await getDoc(userRef);
 
                 if (userSnap.exists()) {
-                    const userData = userSnap.data();
-                    setUserProfile({
-                        name: userData.name || '',
-                        surname: userData.surname || ''
-                    });
+                    const userData = userSnap.data() as UserProfile;
+                    setUserProfile(userData);
                 }
             } catch (error) {
                 console.error('Failed to fetch user profile:', error);
@@ -61,6 +59,15 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
             onClick: handleLogout
         }
     ];
+
+    // Add admin menu item if user is admin
+    if (userProfile?.isAdmin) {
+        userMenuItems.unshift({
+            key: 'admin',
+            label: <Link href="/admin">Admin Dashboard</Link>,
+            icon: <DashboardOutlined />
+        });
+    }
 
     return (
         <AntdConfigProvider>
@@ -139,7 +146,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                             { key: 'home', label: <Link href="/">Home</Link> },
                             { key: 'about', label: <Link href="/about">About Us</Link> },
                             { key: 'services', label: <Link href="/services">Services</Link> },
-                            { key: 'products', label: <Link href="/products">Products</Link> }
+                            { key: 'products', label: <Link href="/products">Products</Link> },
+                            ...(userProfile?.isAdmin ? [{ key: 'admin', label: <Link href="/admin">Admin</Link> }] : [])
                         ]}
                     />
                     <Content style={{

@@ -1,0 +1,57 @@
+.adminDashboard {
+    padding: 1rem;
+}
+
+.navigationBar {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: center;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 64px - 48px - 98px);
+    /* viewport height - header - menu - footer */
+}
+
+.statsRow {
+    margin-bottom: 2rem;
+}
+
+.managementRow {
+    margin-bottom: 2rem;
+}
+
+.actionCard,
+.activityCard {
+    height: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .adminDashboard {
+        padding: 0.5rem;
+    }
+
+    .navigationBar {
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+    }
+
+    .navigationBar .ant-btn-group {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .statsRow,
+    .managementRow {
+        margin-bottom: 1rem;
+    }
+}

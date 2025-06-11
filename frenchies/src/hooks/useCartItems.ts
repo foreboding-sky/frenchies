@@ -4,16 +4,7 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
-
-export interface CartItem {
-    productId: string;
-    productTitle: string;
-    image: string;
-    priceAtTime: number;
-    quantity: number;
-    productRef: string;
-    updatedAt: any;
-}
+import { CartItem } from '@/types/cart';
 
 export function useCartItems() {
     const { user } = useAuth();

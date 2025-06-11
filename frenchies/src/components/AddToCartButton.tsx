@@ -1,46 +1,45 @@
 'use client';
 
-import { Button } from 'antd';
+import { useState } from 'react';
+import { Button, App } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { doc, setDoc, updateDoc, increment, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
+import { useCart } from '@/lib/cart';
+import { AddToCartButtonProps } from '@/types/components';
+import styles from './AddToCartButton.module.css';
 
-interface Props {
-  product: any;
-  compact?: boolean;
-}
-
-export default function AddToCartButton({ product, compact = false }: Props) {
+export default function AddToCartButton({ product, compact = false }: AddToCartButtonProps) {
   const { user } = useAuth();
+  const { addToCart } = useCart();
+  const [loading, setLoading] = useState(false);
+  const { message } = App.useApp();
 
   const handleAddToCart = async () => {
-    if (!user) return;
+    if (!user) {
+      message.warning('Please sign in to add items to cart');
+      return;
+    }
 
-    const cartItemRef = doc(db, 'carts', user.uid, 'cartItems', product.id);
-    const existing = await getDoc(cartItemRef);
-
-    if (existing.exists()) {
-      await updateDoc(cartItemRef, {
-        quantity: increment(1),
-        updatedAt: new Date(),
-      });
-    } else {
-      await setDoc(cartItemRef, {
-        productId: product.id,
-        productTitle: product.title,
-        image: product.images?.[0] ?? '',
-        priceAtTime: (product.price - product.price * product.discount / 100).toFixed(2),
-        quantity: 1,
-        productRef: `/products/${product.id}`,
-        updatedAt: new Date(),
-      });
+    setLoading(true);
+    try {
+      await addToCart(product);
+      message.success('Added to cart');
+    } catch (error) {
+      message.error('Failed to add to cart');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Button icon={<ShoppingCartOutlined />} onClick={handleAddToCart}>
-      {!compact && 'Add to Cart'}
+    <Button
+      type="primary"
+      icon={<ShoppingCartOutlined />}
+      onClick={handleAddToCart}
+      loading={loading}
+      className={compact ? styles.compactButton : styles.button}
+    >
+      {compact ? '' : 'Add to Cart'}
     </Button>
   );
 }
