@@ -1,5 +1,5 @@
 import './globals.css';
-import 'antd/dist/reset.css';
+import { ConfigProvider } from 'antd';
 import AntdStyleProvider from '../lib/antd';
 import ClientLayoutWrapper from './layout.client';
 
@@ -13,7 +13,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <AntdStyleProvider>
-          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#00b96b',
+              },
+            }}
+          >
+            <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+          </ConfigProvider>
         </AntdStyleProvider>
       </body>
     </html>
