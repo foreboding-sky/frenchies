@@ -74,7 +74,7 @@ export default function AppointmentPage() {
                 name: values.name,
                 surName: values.name,
                 phone: values.phone,
-                service: values.service,
+                services: values.service,
                 preferredDate: values.datetime.toISOString(),
                 comment: values.comment || '',
                 status: 'pending',
@@ -99,7 +99,7 @@ export default function AppointmentPage() {
                         type="default"
                         icon={<ArrowLeftOutlined />}
                         className={styles.navButton}
-                        onClick={() => router.push('/')}
+                        onClick={() => router.back()}
                     >
                         Back
                     </Button>
@@ -118,7 +118,11 @@ export default function AppointmentPage() {
                     <Form.Item
                         name="name"
                         label="Your Name"
-                        rules={[{ required: true, message: 'Please enter your name' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your name' },
+                            { min: 2, message: 'Name must be at least 2 characters' },
+                            { max: 50, message: 'Name cannot exceed 50 characters' }
+                        ]}
                     >
                         <Input placeholder="Enter your full name" />
                     </Form.Item>
@@ -126,20 +130,30 @@ export default function AppointmentPage() {
                     <Form.Item
                         name="phone"
                         label="Phone Number"
-                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your phone number' },
+                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Please enter a valid phone number' }
+                        ]}
                     >
-                        <Input placeholder="Enter your phone number" />
+                        <Input placeholder="+380XXXXXXXXX" />
                     </Form.Item>
 
                     <Form.Item
                         name="service"
-                        label="Select Service"
-                        rules={[{ required: true, message: 'Please select a service' }]}
+                        label="Select Services"
+                        rules={[
+                            { required: true, message: 'Please select at least one service' },
+                            { type: 'array', min: 1, message: 'Please select at least one service' }
+                        ]}
                     >
-                        <Select placeholder="Choose a service">
+                        <Select
+                            mode="multiple"
+                            placeholder="Choose one or more services"
+                            style={{ width: '100%' }}
+                        >
                             {services.map((service) => (
                                 <Select.Option key={service.id} value={service.title}>
-                                    {service.title}
+                                    {service.title} - ${service.price}
                                 </Select.Option>
                             ))}
                         </Select>
@@ -148,7 +162,16 @@ export default function AppointmentPage() {
                     <Form.Item
                         name="datetime"
                         label="Preferred Date & Time"
-                        rules={[{ required: true, message: 'Please select date and time' }]}
+                        rules={[
+                            { required: true, message: 'Please select date and time' },
+                            {
+                                validator: async (_, value) => {
+                                    if (value && value.toDate() < new Date()) {
+                                        throw new Error('Please select a future date and time');
+                                    }
+                                }
+                            }
+                        ]}
                     >
                         <DatePicker showTime format="YYYY-MM-DD HH:mm" />
                     </Form.Item>
@@ -156,6 +179,9 @@ export default function AppointmentPage() {
                     <Form.Item
                         name="comment"
                         label="Additional Comments"
+                        rules={[
+                            { max: 500, message: 'Comments cannot exceed 500 characters' }
+                        ]}
                     >
                         <TextArea
                             rows={4}

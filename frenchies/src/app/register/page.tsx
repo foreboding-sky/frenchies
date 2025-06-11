@@ -66,7 +66,8 @@ export default function RegisterPage() {
                         name="email"
                         rules={[
                             { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' }
+                            { type: 'email', message: 'Please enter a valid email' },
+                            { max: 100, message: 'Email cannot exceed 100 characters' }
                         ]}
                         className={styles.formItem}
                     >
@@ -77,7 +78,12 @@ export default function RegisterPage() {
                         name="password"
                         rules={[
                             { required: true, message: 'Please enter your password' },
-                            { min: 6, message: 'Password must be at least 6 characters' }
+                            { min: 6, message: 'Password must be at least 6 characters' },
+                            { max: 50, message: 'Password cannot exceed 50 characters' },
+                            {
+                                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+                                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+                            }
                         ]}
                         className={styles.formItem}
                     >

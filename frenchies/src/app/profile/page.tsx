@@ -240,23 +240,34 @@ export default function ProfilePage() {
                     <Form.Item
                         name="name"
                         label="Name"
-                        rules={[{ required: true, message: 'Please enter your name' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your name' },
+                            { min: 2, message: 'Name must be at least 2 characters' },
+                            { max: 50, message: 'Name cannot exceed 50 characters' }
+                        ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="surname"
                         label="Surname"
-                        rules={[{ required: true, message: 'Please enter your surname' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your surname' },
+                            { min: 2, message: 'Surname must be at least 2 characters' },
+                            { max: 50, message: 'Surname cannot exceed 50 characters' }
+                        ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="phone"
                         label="Phone"
-                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your phone number' },
+                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Please enter a valid phone number' }
+                        ]}
                     >
-                        <Input />
+                        <Input placeholder="+380XXXXXXXXX" />
                     </Form.Item>
                     <Form.Item
                         name="email"

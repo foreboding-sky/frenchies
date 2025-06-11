@@ -46,11 +46,11 @@ export default function AboutPage() {
                 </Card>
 
                 <Card className={styles.contactCard}>
-                    <Row gutter={[48, 48]}>
+                    <Row gutter={[32, 32]}>
                         <Col xs={24} sm={12} md={6}>
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <EnvironmentOutlined className={styles.contactIcon} />
-                                <div>
+                                <div className={styles.contactInfo}>
                                     <strong>Address</strong>
                                     <p>Ivana Vyshenskoho St, 3,<br />Rivne, 33017</p>
                                 </div>
@@ -59,7 +59,7 @@ export default function AboutPage() {
                         <Col xs={24} sm={12} md={6}>
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <PhoneOutlined className={styles.contactIcon} />
-                                <div>
+                                <div className={styles.contactInfo}>
                                     <strong>Phone</strong>
                                     <p>+380 98 123 45 67</p>
                                 </div>
@@ -68,16 +68,29 @@ export default function AboutPage() {
                         <Col xs={24} sm={12} md={6}>
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <ClockCircleOutlined className={styles.contactIcon} />
-                                <div>
+                                <div className={styles.contactInfo}>
                                     <strong>Hours</strong>
-                                    <p>Mon–Sat<br />09:00–20:00</p>
+                                    <div className={styles.hoursList}>
+                                        <div className={styles.hoursRow}>
+                                            <span>Mon-Fri:</span>
+                                            <span>09:00–20:00</span>
+                                        </div>
+                                        <div className={styles.hoursRow}>
+                                            <span>Saturday:</span>
+                                            <span>09:00–18:00</span>
+                                        </div>
+                                        <div className={styles.hoursRow}>
+                                            <span>Sunday:</span>
+                                            <span className={styles.closed}>Closed</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </Space>
                         </Col>
                         <Col xs={24} sm={12} md={6}>
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <InstagramOutlined className={styles.contactIcon} />
-                                <div>
+                                <div className={styles.contactInfo}>
                                     <strong>Instagram</strong>
                                     <a
                                         href="https://www.instagram.com/frenchies.rivne/"

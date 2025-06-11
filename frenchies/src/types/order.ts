@@ -10,6 +10,7 @@ export type OrderItem = {
 };
 
 export type Order = {
+    id?: string;
     userId: string;
     userEmail: string;
     userRef: DocumentReference;

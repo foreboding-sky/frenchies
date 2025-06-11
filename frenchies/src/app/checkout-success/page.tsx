@@ -5,15 +5,15 @@ import { useSearchParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Order } from '@/types/order';
-import { Descriptions, Spin, Result, Button } from 'antd';
+import { Descriptions, Spin, Result, Button, Typography } from 'antd';
 import Link from 'next/link';
 import styles from './checkout-success.module.css';
 
 export default function CheckoutSuccessPage() {
-    const searchParams = useSearchParams();
-    const orderId = searchParams.get('orderId');
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get('orderId');
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -24,11 +24,10 @@ export default function CheckoutSuccessPage() {
                 const orderSnap = await getDoc(orderRef);
 
                 if (orderSnap.exists()) {
-                    const data = orderSnap.data() as Order;
-                    setOrder(data);
+                    setOrder({ ...orderSnap.data() as Order, id: orderSnap.id });
                 }
-            } catch (err) {
-                console.error('Failed to fetch order:', err);
+            } catch (error) {
+                console.error('Error fetching order:', error);
             } finally {
                 setLoading(false);
             }
@@ -41,8 +40,11 @@ export default function CheckoutSuccessPage() {
         return (
             <div className={styles.successPage}>
                 <div className={styles.contentSection}>
-                    <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+                    <div className={styles.loadingContainer}>
                         <Spin size="large" />
+                        <Typography.Text className={styles.loadingText}>
+                            Processing your order...
+                        </Typography.Text>
                     </div>
                 </div>
             </div>
@@ -54,18 +56,14 @@ export default function CheckoutSuccessPage() {
             <div className={styles.successPage}>
                 <div className={styles.contentSection}>
                     <Result
-                        status="404"
+                        status="error"
                         title="Order Not Found"
-                        subTitle="We couldn't find your order. Please contact support."
-                        extra={
-                            <div className={styles.actions}>
-                                <Link href="/">
-                                    <Button type="primary" className={styles.actionButton}>
-                                        Go Home
-                                    </Button>
-                                </Link>
-                            </div>
-                        }
+                        subTitle="We couldn't find your order. Please contact support if this persists."
+                        extra={[
+                            <Link href="/" key="home">
+                                <Button type="primary">Back to Home</Button>
+                            </Link>
+                        ]}
                     />
                 </div>
             </div>

@@ -47,7 +47,8 @@ export default function LoginPage() {
                         name="email"
                         rules={[
                             { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' }
+                            { type: 'email', message: 'Please enter a valid email' },
+                            { max: 100, message: 'Email cannot exceed 100 characters' }
                         ]}
                         className={styles.formItem}
                     >
@@ -56,7 +57,11 @@ export default function LoginPage() {
 
                     <Form.Item
                         name="password"
-                        rules={[{ required: true, message: 'Please enter your password' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your password' },
+                            { min: 6, message: 'Password must be at least 6 characters' },
+                            { max: 50, message: 'Password cannot exceed 50 characters' }
+                        ]}
                         className={styles.formItem}
                     >
                         <Input.Password placeholder="Password" />

@@ -159,7 +159,11 @@ export default function CheckoutPage() {
                     <Form.Item
                         label="Name"
                         name="name"
-                        rules={[{ required: true, message: 'Please enter your name' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your name' },
+                            { min: 2, message: 'Name must be at least 2 characters' },
+                            { max: 50, message: 'Name cannot exceed 50 characters' }
+                        ]}
                         className={styles.formItem}
                     >
                         <Input />
@@ -168,7 +172,11 @@ export default function CheckoutPage() {
                     <Form.Item
                         label="Surname"
                         name="surname"
-                        rules={[{ required: true, message: 'Please enter your surname' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your surname' },
+                            { min: 2, message: 'Surname must be at least 2 characters' },
+                            { max: 50, message: 'Surname cannot exceed 50 characters' }
+                        ]}
                         className={styles.formItem}
                     >
                         <Input />
@@ -177,16 +185,23 @@ export default function CheckoutPage() {
                     <Form.Item
                         label="Phone"
                         name="phone"
-                        rules={[{ required: true, message: 'Please enter your phone number' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your phone number' },
+                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Please enter a valid phone number' }
+                        ]}
                         className={styles.formItem}
                     >
-                        <Input />
+                        <Input placeholder="+380XXXXXXXXX" />
                     </Form.Item>
 
                     <Form.Item
                         label="Address"
                         name="address"
-                        rules={[{ required: true, message: 'Please enter your address' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your address' },
+                            { min: 5, message: 'Address must be at least 5 characters' },
+                            { max: 200, message: 'Address cannot exceed 200 characters' }
+                        ]}
                         className={styles.formItem}
                     >
                         <Input />
@@ -195,7 +210,11 @@ export default function CheckoutPage() {
                     <Form.Item
                         label="City"
                         name="city"
-                        rules={[{ required: true, message: 'Please enter your city' }]}
+                        rules={[
+                            { required: true, message: 'Please enter your city' },
+                            { min: 2, message: 'City must be at least 2 characters' },
+                            { max: 50, message: 'City cannot exceed 50 characters' }
+                        ]}
                         className={styles.formItem}
                     >
                         <Input />

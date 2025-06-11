@@ -79,18 +79,24 @@
 }
 
 .contactCard {
+    margin-top: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .contactItem {
+    width: 100%;
     text-align: center;
-    padding: 1rem;
+}
+
+.contactInfo {
+    width: 100%;
+    max-width: 200px;
 }
 
 .contactIcon {
     font-size: 2rem;
-    color: var(--accent-color);
+    color: var(--primary-color);
     margin-bottom: 1rem;
 }
 
@@ -107,14 +113,42 @@
     line-height: 1.6;
 }
 
+.hoursList {
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.hoursRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+}
+
+.hoursRow span:first-child {
+    color: var(--text-color-secondary);
+    min-width: 80px;
+}
+
+.hoursRow span:last-child {
+    text-align: right;
+}
+
+.closed {
+    color: #ff4d4f;
+}
+
 .instagramLink {
-    color: #d63384;
+    color: var(--primary-color);
     text-decoration: none;
-    transition: color 0.3s ease;
 }
 
 .instagramLink:hover {
-    color: #a5286a;
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
@@ -136,7 +170,12 @@
         gap: 1rem;
     }
 
-    .contactItem {
-        padding: 0.5rem;
+    .contactInfo {
+        max-width: 100%;
+    }
+
+    .hoursList {
+        max-width: 200px;
+        margin: 0.5rem auto 0;
     }
 }

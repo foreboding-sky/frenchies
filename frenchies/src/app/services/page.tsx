@@ -1,9 +1,11 @@
 'use client';
 
-import { Typography, Card, Col, Row, Spin, Image } from 'antd';
+import { Typography, Card, Col, Row, Spin, Image, Button } from 'antd';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { CalendarOutlined } from '@ant-design/icons';
 import styles from './services.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -32,6 +34,7 @@ const servicesData = [
 export default function ServicesPage() {
     const [services, setServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -61,6 +64,15 @@ export default function ServicesPage() {
                     Experience our range of premium beauty services, each designed to enhance your natural beauty
                     and provide you with a luxurious experience.
                 </Paragraph>
+                <Button
+                    type="primary"
+                    size="large"
+                    icon={<CalendarOutlined />}
+                    onClick={() => router.push('/appointment')}
+                    className={styles.ctaButton}
+                >
+                    Book an Appointment
+                </Button>
             </div>
 
             <div className={styles.contentSection}>
