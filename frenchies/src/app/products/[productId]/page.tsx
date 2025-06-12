@@ -91,21 +91,29 @@ export default function ProductDetailsPage() {
                 <div className={styles.productContent}>
                     <div className={styles.imageSection}>
                         <Image
-                            src={product.images?.[selectedImage] || 'https://via.placeholder.com/400x400'}
+                            src={product.images?.[selectedImage] ? `/${product.images[selectedImage]}` : '/no-image.svg'}
                             alt={product.title}
                             className={styles.mainImage}
                             preview={false}
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/no-image.svg';
+                            }}
                         />
                         {product.images && product.images.length > 1 && (
                             <div className={styles.thumbnailContainer}>
-                                {product.images.map((url, index) => (
+                                {product.images.filter(url => url && url.trim() !== '').map((url, index) => (
                                     <Image
                                         key={index}
-                                        src={url}
+                                        src={`/${url}`}
                                         alt={`${product.title} thumbnail ${index + 1}`}
                                         className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ''}`}
                                         onClick={() => setSelectedImage(index)}
                                         preview={false}
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = '/no-image.svg';
+                                        }}
                                     />
                                 ))}
                             </div>

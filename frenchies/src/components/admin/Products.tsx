@@ -73,14 +73,6 @@ export default function Products() {
 
     const handleEdit = async (product: Product) => {
         setEditingProduct(product);
-        // Convert existing images to fileList format
-        const existingFiles = product.images.map((url, index) => ({
-            uid: `-${index}`,
-            name: `image-${index}`,
-            status: 'done' as const,
-            url: url
-        }));
-        setFileList(existingFiles);
 
         // If categories are not loaded yet, fetch them
         if (categories.length === 0) {
@@ -91,35 +83,18 @@ export default function Products() {
         let categoryId = '';
         if (typeof product.categoryRef === 'string') {
             categoryId = product.categoryRef.split('/').pop() || '';
-        } else if (product.categoryRef && typeof product.categoryRef === 'object') {
-            categoryId = (product.categoryRef as any).id || '';
         }
 
         form.setFieldsValue({
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            brand: product.brand,
-            categoryRef: categoryId,
-            discount: product.discount,
-            featured: product.featured,
-            isActive: product.isActive,
-            stock: product.stock,
-            tags: product.tags
+            ...product,
+            images: product.images?.join('\n') || '',
+            categoryId: categoryId
         });
         setModalVisible(true);
     };
 
     const handleDelete = async (productId: string, images: string[]) => {
         try {
-            // Delete all images from storage
-            for (const imageUrl of images) {
-                if (imageUrl) {
-                    const imageRef = ref(storage, imageUrl);
-                    await deleteObject(imageRef);
-                }
-            }
-
             // Delete the product document
             await deleteDoc(doc(db, 'products', productId));
             messageApi.success('Product deleted successfully');
@@ -132,70 +107,39 @@ export default function Products() {
 
     const handleSubmit = async (values: any) => {
         try {
-            setUploading(true);
-            let imageUrls = editingProduct?.images || [];
-
-            // Upload new files
-            const newFiles = fileList.filter(file => file.originFileObj);
-            if (newFiles.length > 0) {
-                const uploadPromises = newFiles.map(async (file) => {
-                    const imageRef = ref(storage, `products/${Date.now()}_${file.name}`);
-                    await uploadBytes(imageRef, file.originFileObj!);
-                    return getDownloadURL(imageRef);
-                });
-
-                const newImageUrls = await Promise.all(uploadPromises);
-                imageUrls = [...imageUrls, ...newImageUrls];
-
-                // Delete old images if updating
-                if (editingProduct?.images) {
-                    const deletePromises = editingProduct.images.map(async (imageUrl) => {
-                        if (imageUrl) {
-                            const oldImageRef = ref(storage, imageUrl);
-                            await deleteObject(oldImageRef);
-                        }
-                    });
-                    await Promise.all(deletePromises);
-                }
-            }
-
-            // Create the category reference path
-            const categoryRef = `categories/${values.categoryRef}`;
+            // Convert the textarea input into an array of image paths
+            const imagePaths = values.images
+                .split('\n')
+                .map((path: string) => path.trim())
+                .filter((path: string) => path.length > 0);
 
             const productData = {
-                title: values.title,
+                ...values,
                 description: values.description,
-                price: values.price,
-                brand: values.brand,
-                categoryRef: categoryRef,
-                discount: values.discount || 0,
-                featured: values.featured || false,
-                isActive: values.isActive || true,
-                stock: values.stock || 0,
+                images: imagePaths,
+                categoryRef: `categories/${values.categoryId}`,
                 tags: values.tags || [],
-                images: imageUrls,
+                featured: values.featured || false,
+                isActive: values.isActive || false,
                 updatedAt: serverTimestamp()
             };
 
             if (editingProduct) {
-                await updateDoc(doc(db, 'products', editingProduct.id), productData);
+                await updateDoc(doc(db, 'products', editingProduct.id!), productData);
                 messageApi.success('Product updated successfully');
             } else {
-                await addDoc(collection(db, 'products'), {
-                    ...productData,
-                    createdAt: serverTimestamp()
-                });
-                messageApi.success('Product created successfully');
+                productData.createdAt = serverTimestamp();
+                await addDoc(collection(db, 'products'), productData);
+                messageApi.success('Product added successfully');
             }
 
             setModalVisible(false);
-            setFileList([]);
+            form.resetFields();
+            setEditingProduct(null);
             fetchProducts();
         } catch (error) {
             console.error('Error saving product:', error);
             messageApi.error('Failed to save product');
-        } finally {
-            setUploading(false);
         }
     };
 
@@ -204,13 +148,20 @@ export default function Products() {
             title: 'Image',
             dataIndex: 'images',
             key: 'image',
-            render: (images: string[]) => (
-                <img
-                    src={images?.[0] || '/placeholder.png'}
-                    alt="Product"
-                    className={styles.productImage}
-                />
-            ),
+            render: (images: string[]) => {
+                const imagePath = images?.[0] || '/no-image.svg';
+                return (
+                    <img
+                        src={imagePath}
+                        alt="Product"
+                        className={styles.productImage}
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/no-image.svg';
+                        }}
+                    />
+                );
+            },
         },
         {
             title: 'Title',
@@ -321,23 +272,15 @@ export default function Products() {
                     open={modalVisible}
                     onCancel={() => {
                         setModalVisible(false);
-                        setFileList([]);
+                        form.resetFields();
+                        setEditingProduct(null);
                     }}
                     footer={null}
-                    width={800}
                 >
                     <Form
                         form={form}
                         layout="vertical"
                         onFinish={handleSubmit}
-                        initialValues={{
-                            price: 0,
-                            discount: 0,
-                            stock: 0,
-                            featured: false,
-                            isActive: true,
-                            tags: []
-                        }}
                     >
                         <Form.Item
                             name="title"
@@ -348,23 +291,23 @@ export default function Products() {
                         </Form.Item>
 
                         <Form.Item
-                            name="description"
-                            label="Description"
-                            rules={[{ required: true, message: 'Please enter the product description' }]}
-                        >
-                            <TextArea rows={4} />
-                        </Form.Item>
-
-                        <Form.Item
                             name="brand"
                             label="Brand"
-                            rules={[{ required: true, message: 'Please enter the product brand' }]}
+                            rules={[{ required: true, message: 'Please enter the brand' }]}
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item
-                            name="categoryRef"
+                            name="sku"
+                            label="SKU"
+                            rules={[{ required: true, message: 'Please enter the SKU' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="categoryId"
                             label="Category"
                             rules={[{ required: true, message: 'Please select a category' }]}
                         >
@@ -383,9 +326,17 @@ export default function Products() {
                         </Form.Item>
 
                         <Form.Item
+                            name="description"
+                            label="Description"
+                            rules={[{ required: true, message: 'Please enter the description' }]}
+                        >
+                            <Input.TextArea rows={4} />
+                        </Form.Item>
+
+                        <Form.Item
                             name="price"
                             label="Price"
-                            rules={[{ required: true, message: 'Please enter the product price' }]}
+                            rules={[{ required: true, message: 'Please enter the price' }]}
                         >
                             <InputNumber
                                 min={0}
@@ -402,7 +353,6 @@ export default function Products() {
                             <InputNumber
                                 min={0}
                                 max={100}
-                                step={1}
                                 style={{ width: '100%' }}
                             />
                         </Form.Item>
@@ -410,12 +360,22 @@ export default function Products() {
                         <Form.Item
                             name="stock"
                             label="Stock"
-                            rules={[{ required: true, message: 'Please enter the product stock' }]}
+                            rules={[{ required: true, message: 'Please enter the stock quantity' }]}
                         >
                             <InputNumber
                                 min={0}
-                                step={1}
                                 style={{ width: '100%' }}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="images"
+                            label="Image Paths"
+                            rules={[{ required: true, message: 'Please enter at least one image path' }]}
+                        >
+                            <Input.TextArea
+                                placeholder="Enter image paths (one per line, e.g., /images/products/image.jpg). Do not include 'public' in the path."
+                                rows={4}
                             />
                         </Form.Item>
 
@@ -423,19 +383,13 @@ export default function Products() {
                             name="tags"
                             label="Tags"
                         >
-                            <Select
-                                mode="tags"
-                                style={{ width: '100%' }}
-                                placeholder="Enter tags"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="featured"
-                            label="Featured"
-                            valuePropName="checked"
-                        >
-                            <Switch />
+                            <Select mode="tags" style={{ width: '100%' }} placeholder="Enter tags">
+                                {editingProduct?.tags?.map(tag => (
+                                    <Select.Option key={tag} value={tag}>
+                                        {tag}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item
@@ -447,34 +401,22 @@ export default function Products() {
                         </Form.Item>
 
                         <Form.Item
-                            label="Images"
-                            required={!editingProduct}
-                            rules={[{ required: !editingProduct, message: 'Please upload at least one product image' }]}
+                            name="featured"
+                            label="Featured"
+                            valuePropName="checked"
                         >
-                            <Upload
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={({ fileList }) => setFileList(fileList)}
-                                beforeUpload={() => false}
-                                multiple
-                            >
-                                {fileList.length >= 8 ? null : (
-                                    <div>
-                                        <PlusOutlined />
-                                        <div style={{ marginTop: 8 }}>Upload</div>
-                                    </div>
-                                )}
-                            </Upload>
+                            <Switch />
                         </Form.Item>
 
                         <Form.Item>
                             <Space>
-                                <Button type="primary" htmlType="submit" loading={uploading}>
-                                    {editingProduct ? 'Update' : 'Create'}
+                                <Button type="primary" htmlType="submit">
+                                    {editingProduct ? 'Update' : 'Add'} Product
                                 </Button>
                                 <Button onClick={() => {
                                     setModalVisible(false);
-                                    setFileList([]);
+                                    form.resetFields();
+                                    setEditingProduct(null);
                                 }}>
                                     Cancel
                                 </Button>
