@@ -96,6 +96,20 @@
     color: var(--text-color-secondary);
 }
 
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem;
+}
+
+.loadingText {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
 @media (max-width: 768px) {
     .contentSection {
         padding: 1.5rem;

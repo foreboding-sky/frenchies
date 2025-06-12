@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Input, Select, Tag, Space, Button, App } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Input, Select, Tag, Space, Button, App, Modal, Descriptions, Typography } from 'antd';
+import { SearchOutlined, ReloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { collection, query, orderBy, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Order } from '@/types/order';
@@ -10,6 +10,7 @@ import styles from './Orders.module.css';
 import type { Key } from 'antd/es/table/interface';
 
 const { Search } = Input;
+const { Text } = Typography;
 
 const statusColors = {
     pending: 'warning',
@@ -31,6 +32,8 @@ export default function Orders() {
     const [searchText, setSearchText] = useState('');
     const [statusFilter, setStatusFilter] = useState<string | null>(null);
     const [paymentStatusFilter, setPaymentStatusFilter] = useState<string | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const { message: messageApi } = App.useApp();
 
     const fetchOrders = async () => {
@@ -72,6 +75,11 @@ export default function Orders() {
             console.error('Error updating order status:', error);
             messageApi.error('Failed to update order status');
         }
+    };
+
+    const showOrderDetails = (order: Order) => {
+        setSelectedOrder(order);
+        setIsModalVisible(true);
     };
 
     const columns = [
@@ -144,6 +152,19 @@ export default function Orders() {
             ],
             onFilter: (value: boolean | Key, record: Order) => record.paymentStatus === value,
         },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_: any, record: Order) => (
+                <Button
+                    type="text"
+                    icon={<EyeOutlined />}
+                    onClick={() => showOrderDetails(record)}
+                >
+                    View Details
+                </Button>
+            ),
+        },
     ];
 
     const filteredOrders = orders.filter(order => {
@@ -210,6 +231,68 @@ export default function Orders() {
                     showTotal: (total) => `Total ${total} orders`
                 }}
             />
+            <Modal
+                title="Order Details"
+                open={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                footer={null}
+                width={800}
+            >
+                {selectedOrder && (
+                    <Descriptions bordered column={2}>
+                        <Descriptions.Item label="Order Number" span={2}>
+                            {selectedOrder.orderNumber}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Customer Name">
+                            {`${selectedOrder.name} ${selectedOrder.surname}`}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Email">
+                            {selectedOrder.userEmail}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Phone">
+                            {selectedOrder.phone}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Address" span={2}>
+                            {`${selectedOrder.address}, ${selectedOrder.city}`}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Order Date">
+                            {selectedOrder.createdAt?.toDate().toLocaleString()}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Status">
+                            <Tag color={statusColors[selectedOrder.status as keyof typeof statusColors]}>
+                                {selectedOrder.status}
+                            </Tag>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Status">
+                            <Tag color={paymentStatusColors[selectedOrder.paymentStatus as keyof typeof paymentStatusColors]}>
+                                {selectedOrder.paymentStatus}
+                            </Tag>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Method">
+                            {selectedOrder.paymentMethod}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Total Amount">
+                            {selectedOrder.totalPrice ? `$${selectedOrder.totalPrice.toFixed(2)}` : 'N/A'}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Coupon" span={2}>
+                            {selectedOrder.coupon && selectedOrder.coupon.trim() ? selectedOrder.coupon : 'None'}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Items" span={2}>
+                            <div className={styles.orderItems}>
+                                {selectedOrder.items?.map((item, index) => (
+                                    <div key={index} className={styles.orderItem}>
+                                        <div className={styles.orderItemInfo}>
+                                            <Text strong>{item.title}</Text>
+                                            <Text type="secondary">Quantity: {item.quantity}</Text>
+                                        </div>
+                                        <Text strong>${Number(item.priceAtTime).toFixed(2)}</Text>
+                                    </div>
+                                ))}
+                            </div>
+                        </Descriptions.Item>
+                    </Descriptions>
+                )}
+            </Modal>
         </div>
     );
 } 

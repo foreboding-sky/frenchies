@@ -127,6 +127,19 @@ export default function CheckoutPage() {
         );
     }
 
+    if (submitting) {
+        return (
+            <div className={styles.checkoutPage}>
+                <div className={styles.contentSection}>
+                    <div className={styles.loadingContainer}>
+                        <Spin size="large" />
+                        <Typography.Text className={styles.loadingText}>Processing your order...</Typography.Text>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (cartItems.length === 0) {
         return (
             <div className={styles.checkoutPage}>
