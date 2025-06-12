@@ -119,32 +119,29 @@ export default function ProductsPage() {
                                     hoverable
                                     className={styles.productCard}
                                     cover={
-                                        <div className={styles.imageContainer}>
-                                            <Image
-                                                alt={product.title}
-                                                src={product.images?.[0] || 'https://via.placeholder.com/400x240'}
-                                                preview={false}
-                                            />
-                                        </div>
+                                        <Link href={`/products/${product.id}`}>
+                                            <div className={styles.imageContainer}>
+                                                <Image
+                                                    alt={product.title}
+                                                    src={product.images?.[0] || 'https://via.placeholder.com/400x240'}
+                                                    preview={false}
+                                                />
+                                            </div>
+                                        </Link>
                                     }
                                 >
                                     <div className={styles.cardContent}>
-                                        <Title level={4} className={styles.cardTitle}>
-                                            {product.title}
-                                        </Title>
-                                        <Paragraph className={styles.description}>
-                                            {product.description}
-                                        </Paragraph>
+                                        <Link href={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Title level={4} className={styles.cardTitle}>
+                                                {product.title}
+                                            </Title>
+                                            <Paragraph className={styles.description}>
+                                                {product.description}
+                                            </Paragraph>
+                                        </Link>
                                         <Text className={styles.price}>
                                             ${product.price}
                                         </Text>
-                                        {product.tags && product.tags.length > 0 && (
-                                            <div className={styles.tags}>
-                                                {product.tags.map((tag: string) => (
-                                                    <Tag key={tag} className={styles.tag}>{tag}</Tag>
-                                                ))}
-                                            </div>
-                                        )}
                                         <div className={styles.actions}>
                                             <AddToCartButton product={product} compact />
                                             <Link href={`/products/${product.id}`} className={styles.detailsButton}>

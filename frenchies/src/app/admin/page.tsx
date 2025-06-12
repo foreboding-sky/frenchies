@@ -148,6 +148,7 @@ export default function AdminDashboard() {
                             children: <Products />,
                         },
                     ]}
+                    style={{ width: '100%' }}
                 />
             </div>
         </div>

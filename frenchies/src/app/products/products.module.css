@@ -121,23 +121,6 @@
     margin-bottom: 0.5rem;
 }
 
-.tags {
-    margin-bottom: 0.75rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-}
-
-.tag {
-    background-color: #f5f5f5;
-    color: var(--text-secondary);
-    border: none;
-    font-size: 0.75rem;
-    padding: 1px 6px;
-    border-radius: 10px;
-    margin: 0;
-}
-
 .actions {
     margin-top: auto;
     display: flex;
