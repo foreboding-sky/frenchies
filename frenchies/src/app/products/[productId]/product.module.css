@@ -121,13 +121,33 @@
 .metaInfo {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #fafafa;
-    border-radius: 8px;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
 }
 
 .metaItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.metaIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.metaContent {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -136,10 +156,26 @@
 .metaLabel {
     color: var(--text-secondary);
     font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .metaValue {
     font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.stockStatus {
+    font-weight: 600;
+}
+
+.inStock {
+    color: #52c41a;
+}
+
+.outOfStock {
+    color: #ff4d4f;
 }
 
 .tags {

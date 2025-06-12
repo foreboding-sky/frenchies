@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Typography, Spin, Image, Button } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, TagOutlined, ShoppingOutlined } from '@ant-design/icons';
 import AddToCartButton from '@/components/AddToCartButton';
 import { Product } from '@/types/product';
 import styles from './product.module.css';
@@ -124,12 +124,18 @@ export default function ProductDetailsPage() {
                         <Title level={2} className={styles.title}>{product.title}</Title>
 
                         <div className={styles.priceSection}>
-                            <Text className={styles.price}>${discountedPrice.toFixed(2)}</Text>
-                            {product.discount && (
+                            {product.discount && product.discount > 0 ? (
                                 <>
+                                    <Text className={styles.price}>
+                                        ${(product.price - (product.price * product.discount / 100)).toFixed(2)}
+                                    </Text>
                                     <Text className={styles.originalPrice}>${product.price.toFixed(2)}</Text>
                                     <Text className={styles.discount}>{product.discount}% OFF</Text>
                                 </>
+                            ) : (
+                                <Text className={styles.price}>
+                                    ${product.price.toFixed(2)}
+                                </Text>
                             )}
                         </div>
 
@@ -137,12 +143,24 @@ export default function ProductDetailsPage() {
 
                         <div className={styles.metaInfo}>
                             <div className={styles.metaItem}>
-                                <Text className={styles.metaLabel}>Category</Text>
-                                <Text className={styles.metaValue}>{categoryName}</Text>
+                                <div className={styles.metaIcon}>
+                                    <TagOutlined />
+                                </div>
+                                <div className={styles.metaContent}>
+                                    <Text className={styles.metaLabel}>Category</Text>
+                                    <Text className={styles.metaValue}>{categoryName || 'Uncategorized'}</Text>
+                                </div>
                             </div>
                             <div className={styles.metaItem}>
-                                <Text className={styles.metaLabel}>Stock</Text>
-                                <Text className={styles.metaValue}>{product.stock} units</Text>
+                                <div className={styles.metaIcon}>
+                                    <ShoppingOutlined />
+                                </div>
+                                <div className={styles.metaContent}>
+                                    <Text className={styles.metaLabel}>Stock Status</Text>
+                                    <Text className={`${styles.metaValue} ${styles.stockStatus} ${product.stock > 0 ? styles.inStock : styles.outOfStock}`}>
+                                        {product.stock > 0 ? `${product.stock} units available` : 'Out of stock'}
+                                    </Text>
+                                </div>
                             </div>
                         </div>
 

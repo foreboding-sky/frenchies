@@ -139,9 +139,21 @@ export default function ProductsPage() {
                                                 {product.description}
                                             </Paragraph>
                                         </Link>
-                                        <Text className={styles.price}>
-                                            ${product.price}
-                                        </Text>
+                                        <div className={styles.priceSection}>
+                                            {product.discount && product.discount > 0 ? (
+                                                <>
+                                                    <Text className={styles.price}>
+                                                        ${(product.price - (product.price * product.discount / 100)).toFixed(2)}
+                                                    </Text>
+                                                    <Text className={styles.originalPrice}>${product.price.toFixed(2)}</Text>
+                                                    <Text className={styles.discount}>{product.discount}% OFF</Text>
+                                                </>
+                                            ) : (
+                                                <Text className={styles.price}>
+                                                    ${product.price.toFixed(2)}
+                                                </Text>
+                                            )}
+                                        </div>
                                         <div className={styles.actions}>
                                             <AddToCartButton product={product} compact />
                                             <Link href={`/products/${product.id}`} className={styles.detailsButton}>
