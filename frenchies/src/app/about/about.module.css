@@ -73,9 +73,25 @@
 }
 
 .mapContainer {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.mapFrame {
+    width: 100%;
+    height: 300px;
     border-radius: 8px;
-    overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mapButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.mapButton {
+    min-width: 180px;
 }
 
 .contactCard {

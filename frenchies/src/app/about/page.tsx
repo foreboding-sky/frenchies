@@ -1,7 +1,7 @@
 'use client';
-import { Typography, Card, Row, Col, Space } from 'antd';
+import { Typography, Card, Row, Col, Space, Button } from 'antd';
 import styles from './about.module.css';
-import { InstagramOutlined, EnvironmentOutlined, PhoneOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { InstagramOutlined, EnvironmentOutlined, PhoneOutlined, ClockCircleOutlined, EnvironmentFilled } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
@@ -20,7 +20,7 @@ export default function AboutPage() {
                     <Title level={2} className={styles.heading}>Our Story</Title>
                     <Paragraph className={styles.paragraph}>
                         Welcome to <strong>Frenchies Beauty Salon</strong> – your premier destination for luxury beauty services.
-                        Founded with a passion for excellence and attention to detail, we've created a sanctuary where
+                        Founded with a passion for excellence and attention to detail, we&apos;ve created a sanctuary where
                         beauty meets sophistication.
                     </Paragraph>
                     <Paragraph className={styles.paragraph}>
@@ -34,14 +34,25 @@ export default function AboutPage() {
                     <Title level={2} className={styles.heading}>Visit Us</Title>
                     <div className={styles.mapContainer}>
                         <iframe
-                            title="Google Maps - Frenchies Salon"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d632.8211890802921!2d26.273509169722058!3d50.62182674907184!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x472f135f2b533ebd%3A0x30a78b3f3006a8b2!2z0LLRg9C70LjRhtGPINCG0LLQsNC90LAg0JLQuNGI0LXQvdGB0YzQutC-0LPQviwgMywg0KDRltCy0L3QtSwg0KDRltCy0L3QtdC90YHRjNC60LAg0L7QsdC70LDRgdGC0YwsIDMzMDE3!5e0!3m2!1suk!2sua!4v1747230077284!5m2!1suk!2sua"
+                            title="Frenchies Salon Location"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=26.2715092%2C50.6208267%2C26.2755092%2C50.6228267&layer=mapnik&marker=50.6218267%2C26.2735092"
                             width="100%"
                             height="300"
                             style={{ border: 0 }}
-                            loading="lazy"
-                            allowFullScreen
+                            className={styles.mapFrame}
                         />
+                    </div>
+                    <div className={styles.mapButtonContainer}>
+                        <Button
+                            type="primary"
+                            icon={<EnvironmentFilled />}
+                            href="https://www.google.com/maps/place/Ivana+Vyshenskoho+St,+3,+Rivne,+33017/@50.6218267,26.2735092,17z/data=!3m1!4b1!4m6!3m5!1s0x472f135f2b533ebd:0x30a78b3f3006a8b2!8m2!3d50.6218267!4d26.2735092!16s%2Fg%2F11c5m8j8_4?entry=ttu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.mapButton}
+                        >
+                            Open in Google Maps
+                        </Button>
                     </div>
                 </Card>
 
