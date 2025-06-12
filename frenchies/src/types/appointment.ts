@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { DocumentReference, Timestamp } from 'firebase/firestore';
 
 export interface AppointmentRequest {
     id: string;
@@ -6,7 +6,7 @@ export interface AppointmentRequest {
     createdAt: Timestamp;
     name: string;
     preferredDate: Timestamp;
-    service: string;
+    service: DocumentReference[];
     status: string;
     surname: string;
 } 

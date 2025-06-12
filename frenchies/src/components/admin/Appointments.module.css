@@ -25,6 +25,18 @@
     text-overflow: ellipsis;
 }
 
+.serviceItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.servicePrice {
+    margin-left: 16px;
+    color: #666;
+}
+
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
