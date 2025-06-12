@@ -8,13 +8,14 @@ import { doc, getDoc, addDoc, collection, getDocs, query, serverTimestamp, where
 import { useRouter } from 'next/navigation';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import styles from './appointment.module.css';
+import { Service } from '@/types/services';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 export default function AppointmentPage() {
     const [submitting, setSubmitting] = useState(false);
-    const [services, setServices] = useState<any[]>([]);
+    const [services, setServices] = useState<Service[]>([]);
     const { message } = App.useApp();
     const [form] = Form.useForm();
     const { user } = useAuth();
@@ -29,7 +30,7 @@ export default function AppointmentPage() {
             const servicesData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-            }));
+            })) as Service[];
             setServices(servicesData);
         };
 
@@ -70,12 +71,17 @@ export default function AppointmentPage() {
     const handleFinish = async (values: any) => {
         setSubmitting(true);
         try {
+            // Create an array of service references
+            const serviceRefs = values.service.map((serviceId: string) =>
+                doc(db, 'services', serviceId)
+            );
+
             await addDoc(collection(db, 'appointmentRequests'), {
                 name: values.name,
-                surName: values.name,
+                surname: values.name,
                 phone: values.phone,
-                services: values.service,
-                preferredDate: values.datetime.toISOString(),
+                services: serviceRefs,
+                preferredDate: values.datetime.toDate(),
                 comment: values.comment || '',
                 status: 'pending',
                 createdAt: serverTimestamp(),
@@ -152,7 +158,7 @@ export default function AppointmentPage() {
                             style={{ width: '100%' }}
                         >
                             {services.map((service) => (
-                                <Select.Option key={service.id} value={service.title}>
+                                <Select.Option key={service.id} value={service.id}>
                                     {service.title} - ${service.price}
                                 </Select.Option>
                             ))}
