@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Input, Select, Tag, Space, Button, App, Modal, Descriptions, Typography } from 'antd';
+import { Table, Input, Select, Tag, Space, Button, App, Modal, Descriptions, Typography, message } from 'antd';
 import { SearchOutlined, ReloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { collection, query, orderBy, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Order } from '@/types/order';
 import styles from './Orders.module.css';
 import type { Key } from 'antd/es/table/interface';
 
@@ -25,6 +24,41 @@ const paymentStatusColors = {
     'Pending': 'warning',
     'Paid': 'success'
 };
+
+interface OrderItem {
+    id: string;
+    name: string;
+    title: string;
+    quantity: number;
+    price: number;
+    priceAtTime: number;
+    image: string;
+}
+
+interface Order {
+    id: string;
+    orderNumber: string;
+    customerName: string;
+    customerEmail: string;
+    userEmail: string;
+    name: string;
+    surname: string;
+    phone: string;
+    address: string;
+    city: string;
+    totalAmount: number;
+    totalPrice: number;
+    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+    paymentStatus: 'Pending' | 'Not paid' | 'Paid';
+    paymentMethod: string;
+    coupon?: {
+        code: string;
+        discount: number;
+    };
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+    items: OrderItem[];
+}
 
 export default function Orders() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -74,6 +108,21 @@ export default function Orders() {
         } catch (error) {
             console.error('Error updating order status:', error);
             messageApi.error('Failed to update order status');
+        }
+    };
+
+    const handlePaymentStatusChange = async (orderId: string, newStatus: 'Pending' | 'Not paid' | 'Paid') => {
+        try {
+            const orderRef = doc(db, 'orders', orderId);
+            await updateDoc(orderRef, {
+                paymentStatus: newStatus,
+                updatedAt: serverTimestamp()
+            });
+            messageApi.success('Payment status updated successfully');
+            fetchOrders();
+        } catch (error) {
+            console.error('Error updating payment status:', error);
+            messageApi.error('Failed to update payment status');
         }
     };
 
@@ -137,32 +186,32 @@ export default function Orders() {
             onFilter: (value: boolean | Key, record: Order) => record.status === value,
         },
         {
-            title: 'Payment',
+            title: 'Payment Status',
             dataIndex: 'paymentStatus',
-            key: 'payment',
-            render: (status: string) => (
-                <Tag color={paymentStatusColors[status as keyof typeof paymentStatusColors] || 'default'}>
-                    {status}
-                </Tag>
+            key: 'paymentStatus',
+            render: (status: 'Pending' | 'Not paid' | 'Paid', record: Order) => (
+                <Select
+                    value={status}
+                    onChange={(value: 'Pending' | 'Not paid' | 'Paid') => handlePaymentStatusChange(record.id, value)}
+                    style={{ width: 120 }}
+                    options={[
+                        { value: 'Pending', label: 'Pending' },
+                        { value: 'Not paid', label: 'Not paid' },
+                        { value: 'Paid', label: 'Paid' }
+                    ]}
+                />
             ),
-            filters: [
-                { text: 'Not Paid', value: 'Not paid' },
-                { text: 'Pending', value: 'Pending' },
-                { text: 'Paid', value: 'Paid' },
-            ],
-            onFilter: (value: boolean | Key, record: Order) => record.paymentStatus === value,
         },
         {
             title: 'Actions',
             key: 'actions',
-            render: (_: any, record: Order) => (
+            align: 'center' as const,
+            render: (_: unknown, record: Order) => (
                 <Button
                     type="text"
                     icon={<EyeOutlined />}
                     onClick={() => showOrderDetails(record)}
-                >
-                    View Details
-                </Button>
+                />
             ),
         },
     ];
@@ -274,8 +323,12 @@ export default function Orders() {
                         <Descriptions.Item label="Total Amount">
                             {selectedOrder.totalPrice ? `$${selectedOrder.totalPrice.toFixed(2)}` : 'N/A'}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Coupon" span={2}>
-                            {selectedOrder.coupon && selectedOrder.coupon.trim() ? selectedOrder.coupon : 'None'}
+                        <Descriptions.Item label="Coupon">
+                            {selectedOrder.coupon && (
+                                typeof selectedOrder.coupon === 'string'
+                                    ? selectedOrder.coupon
+                                    : `${selectedOrder.coupon.code} (${selectedOrder.coupon.discount}% off)`
+                            )}
                         </Descriptions.Item>
                         <Descriptions.Item label="Items" span={2}>
                             <div className={styles.orderItems}>
