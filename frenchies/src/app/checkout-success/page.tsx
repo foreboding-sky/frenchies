@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -9,7 +9,7 @@ import { Descriptions, Spin, Result, Button, Typography } from 'antd';
 import Link from 'next/link';
 import styles from './checkout-success.module.css';
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const searchParams = useSearchParams();
@@ -100,5 +100,24 @@ export default function CheckoutSuccessPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function CheckoutSuccessPage() {
+    return (
+        <Suspense fallback={
+            <div className={styles.successPage}>
+                <div className={styles.contentSection}>
+                    <div className={styles.loadingContainer}>
+                        <Spin size="large" />
+                        <Typography.Text className={styles.loadingText}>
+                            Loading...
+                        </Typography.Text>
+                    </div>
+                </div>
+            </div>
+        }>
+            <CheckoutSuccessContent />
+        </Suspense>
     );
 }

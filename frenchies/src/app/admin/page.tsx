@@ -12,7 +12,6 @@ import { Product } from '@/types/product';
 import Orders from '@/components/admin/Orders';
 import Appointments from '@/components/admin/Appointments';
 import Products from '@/components/admin/Products';
-import Services from '@/components/admin/Services';
 import styles from './admin.module.css';
 
 export default function AdminDashboard() {
@@ -147,11 +146,6 @@ export default function AdminDashboard() {
                             key: 'products',
                             label: 'Products',
                             children: <Products />,
-                        },
-                        {
-                            key: 'services',
-                            label: 'Services',
-                            children: <Services />,
                         },
                     ]}
                     style={{ width: '100%' }}
