@@ -22,7 +22,7 @@ export type Order = {
     phone: string;
     paymentMethod: 'Cash on delivery' | 'Card';
     paymentStatus: 'Not paid' | 'Pending' | 'Paid';
-    status: 'pending' | 'processing' | 'shipped' | 'delivered';
+    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
     createdAt: any;
     updatedAt: any;
     deliveredAt: string;

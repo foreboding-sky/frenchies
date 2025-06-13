@@ -80,7 +80,7 @@ export default function CheckoutPage() {
                 phone: values.phone,
                 paymentMethod: values.paymentMethod,
                 paymentStatus: values.paymentMethod === 'Card' ? 'Pending' : 'Not paid',
-                status: 'pending',
+                status: 'Pending',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
                 deliveredAt: '',
