@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Input, Select, Space, Button, App, Modal, Descriptions, message } from 'antd';
+import { Table, Input, Select, Tag, Space, Button, App, Modal, Descriptions, Typography, message } from 'antd';
 import { SearchOutlined, ReloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { collection, query, orderBy, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -9,6 +9,21 @@ import styles from './Orders.module.css';
 import type { Key } from 'antd/es/table/interface';
 
 const { Search } = Input;
+const { Text } = Typography;
+
+const statusColors = {
+    pending: 'warning',
+    processing: 'processing',
+    shipped: 'info',
+    delivered: 'success',
+    cancelled: 'error'
+};
+
+const paymentStatusColors = {
+    'Not paid': 'error',
+    'Pending': 'warning',
+    'Paid': 'success'
+};
 
 interface OrderItem {
     id: string;
@@ -33,7 +48,7 @@ interface Order {
     city: string;
     totalAmount: number;
     totalPrice: number;
-    status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
     paymentStatus: 'Pending' | 'Not paid' | 'Paid';
     paymentMethod: string;
     coupon?: {
@@ -49,6 +64,8 @@ export default function Orders() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchText, setSearchText] = useState('');
+    const [statusFilter, setStatusFilter] = useState<string | null>(null);
+    const [paymentStatusFilter, setPaymentStatusFilter] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { message: messageApi } = App.useApp();
@@ -132,19 +149,8 @@ export default function Orders() {
             title: 'Date',
             dataIndex: 'createdAt',
             key: 'date',
-            align: 'center' as const,
-            render: (date: Timestamp) => {
-                const orderDate = date.toDate();
-                return (
-                    <div style={{ textAlign: 'center' }}>
-                        <div>{orderDate.toLocaleDateString()}</div>
-                        <div style={{ fontSize: '12px', color: '#666' }}>
-                            {orderDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                    </div>
-                );
-            },
-            sorter: (a: Order, b: Order) => a.createdAt.toMillis() - b.createdAt.toMillis(),
+            render: (date: Timestamp) => date?.toDate().toLocaleDateString(),
+            sorter: (a: Order, b: Order) => a.createdAt.toDate().getTime() - b.createdAt.toDate().getTime(),
         },
         {
             title: 'Total',
@@ -210,6 +216,17 @@ export default function Orders() {
         },
     ];
 
+    const filteredOrders = orders.filter(order => {
+        const matchesSearch = searchText === '' ||
+            order.orderNumber.toLowerCase().includes(searchText.toLowerCase()) ||
+            `${order.name} ${order.surname}`.toLowerCase().includes(searchText.toLowerCase());
+
+        const matchesStatus = !statusFilter || order.status === statusFilter;
+        const matchesPaymentStatus = !paymentStatusFilter || order.paymentStatus === paymentStatusFilter;
+
+        return matchesSearch && matchesStatus && matchesPaymentStatus;
+    });
+
     return (
         <div className={styles.ordersContainer}>
             <div className={styles.header}>
@@ -220,10 +237,31 @@ export default function Orders() {
                         allowClear
                         onSearch={setSearchText}
                         onChange={(e) => setSearchText(e.target.value)}
-                        style={{ width: 300 }}
+                        style={{ width: 200 }}
                     />
+                    <Select
+                        placeholder="Filter by status"
+                        allowClear
+                        style={{ width: 150 }}
+                        onChange={setStatusFilter}
+                    >
+                        <Select.Option value="pending">Pending</Select.Option>
+                        <Select.Option value="processing">Processing</Select.Option>
+                        <Select.Option value="shipped">Shipped</Select.Option>
+                        <Select.Option value="delivered">Delivered</Select.Option>
+                        <Select.Option value="cancelled">Cancelled</Select.Option>
+                    </Select>
+                    <Select
+                        placeholder="Filter by payment"
+                        allowClear
+                        style={{ width: 150 }}
+                        onChange={setPaymentStatusFilter}
+                    >
+                        <Select.Option value="Not paid">Not Paid</Select.Option>
+                        <Select.Option value="Pending">Pending</Select.Option>
+                        <Select.Option value="Paid">Paid</Select.Option>
+                    </Select>
                     <Button
-                        type="primary"
                         icon={<ReloadOutlined />}
                         onClick={fetchOrders}
                     >
@@ -231,15 +269,17 @@ export default function Orders() {
                     </Button>
                 </Space>
             </div>
-
             <Table
                 columns={columns}
-                dataSource={orders}
+                dataSource={filteredOrders}
                 rowKey="id"
                 loading={loading}
-                pagination={{ pageSize: 10 }}
+                pagination={{
+                    pageSize: 10,
+                    showSizeChanger: true,
+                    showTotal: (total) => `Total ${total} orders`
+                }}
             />
-
             <Modal
                 title="Order Details"
                 open={isModalVisible}
@@ -252,75 +292,56 @@ export default function Orders() {
                         <Descriptions.Item label="Order Number" span={2}>
                             {selectedOrder.orderNumber}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Customer Name" span={2}>
-                            {selectedOrder.name} {selectedOrder.surname}
+                        <Descriptions.Item label="Customer Name">
+                            {`${selectedOrder.name} ${selectedOrder.surname}`}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Email" span={2}>
-                            {selectedOrder.customerEmail}
+                        <Descriptions.Item label="Email">
+                            {selectedOrder.userEmail}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Phone" span={2}>
+                        <Descriptions.Item label="Phone">
                             {selectedOrder.phone}
                         </Descriptions.Item>
                         <Descriptions.Item label="Address" span={2}>
-                            {selectedOrder.address}, {selectedOrder.city}
+                            {`${selectedOrder.address}, ${selectedOrder.city}`}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Order Date" span={2}>
-                            {selectedOrder.createdAt.toDate().toLocaleString()}
+                        <Descriptions.Item label="Order Date">
+                            {selectedOrder.createdAt?.toDate().toLocaleString()}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Status">
+                            <Tag color={statusColors[selectedOrder.status as keyof typeof statusColors]}>
+                                {selectedOrder.status}
+                            </Tag>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Status">
+                            <Tag color={paymentStatusColors[selectedOrder.paymentStatus as keyof typeof paymentStatusColors]}>
+                                {selectedOrder.paymentStatus}
+                            </Tag>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Method">
+                            {selectedOrder.paymentMethod}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Total Amount">
+                            {selectedOrder.totalPrice ? `$${selectedOrder.totalPrice.toFixed(2)}` : 'N/A'}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Coupon">
+                            {selectedOrder.coupon && (
+                                typeof selectedOrder.coupon === 'string'
+                                    ? selectedOrder.coupon
+                                    : `${selectedOrder.coupon.code} (${selectedOrder.coupon.discount}% off)`
+                            )}
                         </Descriptions.Item>
                         <Descriptions.Item label="Items" span={2}>
-                            <div className={styles.itemsList}>
-                                {selectedOrder.items.map((item, index) => (
-                                    <div key={index} className={styles.itemRow}>
-                                        <div className={styles.itemInfo}>
-                                            <span className={styles.itemName}>{item.title}</span>
-                                            <span className={styles.itemQuantity}>x{item.quantity}</span>
+                            <div className={styles.orderItems}>
+                                {selectedOrder.items?.map((item, index) => (
+                                    <div key={index} className={styles.orderItem}>
+                                        <div className={styles.orderItemInfo}>
+                                            <Text strong>{item.title}</Text>
+                                            <Text type="secondary">Quantity: {item.quantity}</Text>
                                         </div>
-                                        <span className={styles.itemPrice}>
-                                            ${(item.priceAtTime * item.quantity).toFixed(2)}
-                                        </span>
+                                        <Text strong>${Number(item.priceAtTime).toFixed(2)}</Text>
                                     </div>
                                 ))}
                             </div>
-                        </Descriptions.Item>
-                        {selectedOrder.coupon && (
-                            <Descriptions.Item label="Coupon Applied" span={2}>
-                                {selectedOrder.coupon.code} (${selectedOrder.coupon.discount.toFixed(2)} off)
-                            </Descriptions.Item>
-                        )}
-                        <Descriptions.Item label="Total Amount" span={2}>
-                            ${selectedOrder.totalAmount.toFixed(2)}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Total Price" span={2}>
-                            ${selectedOrder.totalPrice.toFixed(2)}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Payment Method" span={2}>
-                            {selectedOrder.paymentMethod}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Order Status" span={2}>
-                            <Select
-                                value={selectedOrder.status}
-                                onChange={(value: string) => handleStatusChange(selectedOrder.id, value)}
-                                style={{ width: 120 }}
-                            >
-                                <Select.Option value="pending">Pending</Select.Option>
-                                <Select.Option value="processing">Processing</Select.Option>
-                                <Select.Option value="shipped">Shipped</Select.Option>
-                                <Select.Option value="delivered">Delivered</Select.Option>
-                                <Select.Option value="cancelled">Cancelled</Select.Option>
-                            </Select>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Payment Status" span={2}>
-                            <Select
-                                value={selectedOrder.paymentStatus}
-                                onChange={(value: 'Pending' | 'Not paid' | 'Paid') =>
-                                    handlePaymentStatusChange(selectedOrder.id, value)}
-                                style={{ width: 120 }}
-                                options={[
-                                    { value: 'Pending', label: 'Pending' },
-                                    { value: 'Not paid', label: 'Not paid' },
-                                    { value: 'Paid', label: 'Paid' }
-                                ]}
-                            />
                         </Descriptions.Item>
                     </Descriptions>
                 )}
