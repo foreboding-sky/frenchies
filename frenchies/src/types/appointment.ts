@@ -6,7 +6,7 @@ export interface AppointmentRequest {
     createdAt: Timestamp;
     name: string;
     preferredDate: Timestamp;
-    service: DocumentReference[];
+    services: DocumentReference[];
     status: string;
     surname: string;
-} 
+}
