@@ -10,27 +10,6 @@ import styles from './services.module.css';
 
 const { Title, Paragraph } = Typography;
 
-const servicesData = [
-    {
-        title: 'Hair Care',
-        description: 'We offer professional hair care treatments including cuts, styling, coloring, and more.',
-        image: '/hair-care.jpg',
-        price: '$30 - $150',
-    },
-    {
-        title: 'Nail Care',
-        description: 'From manicures to pedicures, our nail care services are designed to make you feel pampered.',
-        image: '/nail-care.jpg',
-        price: '$20 - $100',
-    },
-    {
-        title: 'Skin Care',
-        description: 'Facials, skin treatments, and more to give your skin the care it deserves.',
-        image: '/skin-care.jpg',
-        price: '$40 - $200',
-    },
-];
-
 export default function ServicesPage() {
     const [services, setServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,10 +38,9 @@ export default function ServicesPage() {
     return (
         <div className={styles.servicesPage}>
             <div className={styles.heroSection}>
-                <Title level={1} className={styles.title}>Our Services</Title>
+                <Title level={1} className={styles.title}>Наші послуги</Title>
                 <Paragraph className={styles.subtitle}>
-                    Experience our range of premium beauty services, each designed to enhance your natural beauty
-                    and provide you with a luxurious experience.
+                    Відчуйте наш асортимент преміальних косметичних послуг, кожна з яких розроблена для того, щоб підкреслити вашу природну красу та забезпечити вам розкішний досвід.
                 </Paragraph>
                 <Button
                     type="primary"
@@ -71,7 +49,7 @@ export default function ServicesPage() {
                     onClick={() => router.push('/appointment')}
                     className={styles.ctaButton}
                 >
-                    Book an Appointment
+                    Записатися
                 </Button>
             </div>
 

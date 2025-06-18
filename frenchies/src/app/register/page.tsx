@@ -39,7 +39,7 @@ export default function RegisterPage() {
                 updatedAt: new Date(),
             });
 
-            message.success('Registration successful!');
+            message.success('Реєстрація успішна!');
             router.push('/');
         } catch (error: any) {
             message.error(error.message);
@@ -52,8 +52,8 @@ export default function RegisterPage() {
         <div className={styles.authPage}>
             <div className={styles.contentSection}>
                 <div className={styles.header}>
-                    <Title level={2} className={styles.title}>Create Account</Title>
-                    <Text className={styles.subtitle}>Sign up to get started</Text>
+                    <Title level={2} className={styles.title}>Створити акаунт</Title>
+                    <Text className={styles.subtitle}>Зареєструйтесь, щоб розпочати</Text>
                 </div>
 
                 <Form
@@ -65,9 +65,9 @@ export default function RegisterPage() {
                     <Form.Item
                         name="email"
                         rules={[
-                            { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' },
-                            { max: 100, message: 'Email cannot exceed 100 characters' }
+                            { required: true, message: 'Будь ласка введіть свій email' },
+                            { type: 'email', message: 'Будь ласка введіть правильний email' },
+                            { max: 100, message: 'Email не може бути більше 100 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -77,12 +77,12 @@ export default function RegisterPage() {
                     <Form.Item
                         name="password"
                         rules={[
-                            { required: true, message: 'Please enter your password' },
-                            { min: 6, message: 'Password must be at least 6 characters' },
-                            { max: 50, message: 'Password cannot exceed 50 characters' },
+                            { required: true, message: 'Будь ласка введіть свій пароль' },
+                            { min: 6, message: 'Пароль повинен бути щонайменше 6 символів' },
+                            { max: 50, message: 'Пароль не повинен перевищувати 50 символів' },
                             {
                                 pattern: /^(?=.*[\p{Ll}])(?=.*[\p{Lu}])(?=.*\d)[\p{L}\d]{6,}$/u,
-                                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+                                message: 'Пароль повинен містити щонайменше одну велику літеру, одну малу літеру та одну цифру'
                             }
                         ]}
                         className={styles.formItem}
@@ -103,8 +103,8 @@ export default function RegisterPage() {
                 </Form>
 
                 <div className={styles.switchLink}>
-                    Already have an account?
-                    <Link href="/login">Sign in</Link>
+                    Вже маєте аккаунт?
+                    <Link href="/login">Увійти</Link>
                 </div>
             </div>
         </div>

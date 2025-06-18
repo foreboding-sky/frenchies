@@ -39,7 +39,7 @@ export default function AddToCartButton({ product, compact = false }: AddToCartB
       loading={loading}
       className={compact ? styles.compactButton : styles.button}
     >
-      {compact ? '' : 'Add to Cart'}
+      {compact ? '' : 'У кошик'}
     </Button>
   );
 }

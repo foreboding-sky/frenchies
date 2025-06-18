@@ -85,7 +85,7 @@ export default function ProductDetailsPage() {
                         className={styles.navButton}
                         onClick={() => router.back()}
                     >
-                        Back
+                        Назад
                     </Button>
                 </div>
                 <div className={styles.productContent}>
@@ -147,8 +147,8 @@ export default function ProductDetailsPage() {
                                     <TagOutlined />
                                 </div>
                                 <div className={styles.metaContent}>
-                                    <Text className={styles.metaLabel}>Category</Text>
-                                    <Text className={styles.metaValue}>{categoryName || 'Uncategorized'}</Text>
+                                    <Text className={styles.metaLabel}>Категорія</Text>
+                                    <Text className={styles.metaValue}>{categoryName || 'Невідомо'}</Text>
                                 </div>
                             </div>
                             <div className={styles.metaItem}>
@@ -156,9 +156,9 @@ export default function ProductDetailsPage() {
                                     <ShoppingOutlined />
                                 </div>
                                 <div className={styles.metaContent}>
-                                    <Text className={styles.metaLabel}>Stock Status</Text>
+                                    <Text className={styles.metaLabel}>В наявності</Text>
                                     <Text className={`${styles.metaValue} ${styles.stockStatus} ${product.stock > 0 ? styles.inStock : styles.outOfStock}`}>
-                                        {product.stock > 0 ? `${product.stock} units available` : 'Out of stock'}
+                                        {product.stock > 0 ? `${product.stock} шт у наявності` : 'Закінчилось'}
                                     </Text>
                                 </div>
                             </div>

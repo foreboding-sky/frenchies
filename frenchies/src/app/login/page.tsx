@@ -23,7 +23,7 @@ export default function LoginPage() {
         setLoading(true);
         try {
             await signInWithEmailAndPassword(auth, values.email, values.password);
-            message.success('Login successful!');
+            message.success('Ви успішно ввійшли!');
             router.push('/');
         } catch (error: any) {
             message.error(error.message);
@@ -36,7 +36,7 @@ export default function LoginPage() {
         setResetLoading(true);
         try {
             await sendPasswordResetEmail(auth, values.email);
-            message.success('Password reset email sent! Please check your inbox.');
+            message.success('Повідомлення для зміни паролю відправлене, перевірте свою пошту!');
             setShowResetModal(false);
             resetForm.resetFields();
         } catch (error: any) {
@@ -50,8 +50,8 @@ export default function LoginPage() {
         <div className={styles.authPage}>
             <div className={styles.contentSection}>
                 <div className={styles.header}>
-                    <Title level={2} className={styles.title}>Welcome Back</Title>
-                    <Text className={styles.subtitle}>Sign in to your account</Text>
+                    <Title level={2} className={styles.title}>Вітаємо</Title>
+                    <Text className={styles.subtitle}>Увійдіть у свій обліковий запис</Text>
                 </div>
 
                 <Form
@@ -63,9 +63,9 @@ export default function LoginPage() {
                     <Form.Item
                         name="email"
                         rules={[
-                            { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' },
-                            { max: 100, message: 'Email cannot exceed 100 characters' }
+                            { required: true, message: 'Будь ласка введіть свій email' },
+                            { type: 'email', message: 'Будь ласка введіть правильний email' },
+                            { max: 100, message: 'Email не може бути більше 100 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -75,9 +75,9 @@ export default function LoginPage() {
                     <Form.Item
                         name="password"
                         rules={[
-                            { required: true, message: 'Please enter your password' },
-                            { min: 6, message: 'Password must be at least 6 characters' },
-                            { max: 50, message: 'Password cannot exceed 50 characters' }
+                            { required: true, message: 'Будь ласка введіть свій пароль' },
+                            { min: 6, message: 'Пароль повинен бути щонайменше 6 символів' },
+                            { max: 50, message: 'Пароль не повинен перевищувати 50 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -86,7 +86,7 @@ export default function LoginPage() {
 
                     <div className={styles.forgotPassword}>
                         <Button type="link" onClick={() => setShowResetModal(true)}>
-                            Forgot Password?
+                            Забули пароль?
                         </Button>
                     </div>
 
@@ -97,14 +97,14 @@ export default function LoginPage() {
                             loading={loading}
                             className={styles.submitButton}
                         >
-                            Sign In
+                            Увійти
                         </Button>
                     </Form.Item>
                 </Form>
 
                 <div className={styles.switchLink}>
-                    Don't have an account?
-                    <Link href="/register">Sign up</Link>
+                    Не маєте акаунта?
+                    <Link href="/register">Зареєструватися</Link>
                 </div>
             </div>
 
@@ -125,8 +125,8 @@ export default function LoginPage() {
                     <Form.Item
                         name="email"
                         rules={[
-                            { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' }
+                            { required: true, message: 'Будь ласка введіть свій email' },
+                            { type: 'email', message: 'Будь ласка введіть правильний email' }
                         ]}
                     >
                         <Input placeholder="Enter your email" />

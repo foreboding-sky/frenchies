@@ -72,10 +72,9 @@ export default function ProductsPage() {
     return (
         <div className={styles.productsPage}>
             <div className={styles.heroSection}>
-                <Title level={1} className={styles.title}>Our Products</Title>
+                <Title level={1} className={styles.title}>Наші товари</Title>
                 <Paragraph className={styles.subtitle}>
-                    Discover our curated collection of premium beauty products, carefully selected to enhance your natural beauty
-                    and provide you with the best care for your skin and hair.
+                    Відкрийте для себе нашу кураторську колекцію преміальних косметичних засобів, ретельно відібраних для підкреслення вашої природної краси та забезпечення найкращого догляду за вашою шкірою та волоссям.
                 </Paragraph>
             </div>
 
@@ -83,14 +82,14 @@ export default function ProductsPage() {
                 <div className={styles.filtersSection}>
                     <Space direction="horizontal" size="middle" style={{ width: '100%', justifyContent: 'center' }}>
                         <Input.Search
-                            placeholder="Search products..."
+                            placeholder="Пошук по товарам..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             allowClear
                             style={{ width: 300 }}
                         />
                         <Select
-                            placeholder="Filter by category"
+                            placeholder="Фільтрувати по категорії"
                             allowClear
                             onChange={(value) => setCategoryFilter(value)}
                             style={{ width: 200 }}
@@ -158,7 +157,7 @@ export default function ProductsPage() {
                                             <AddToCartButton product={product} compact />
                                             <Link href={`/products/${product.id}`} className={styles.detailsButton}>
                                                 <Button type="default" size="middle">
-                                                    Details
+                                                    Деталі
                                                 </Button>
                                             </Link>
                                         </div>

@@ -58,19 +58,19 @@ const CartPage = () => {
         <div className={styles.cartPage}>
             <div className={styles.contentSection}>
                 <div className={styles.cartHeader}>
-                    <Title level={2} className={styles.cartTitle}>Shopping Cart</Title>
+                    <Title level={2} className={styles.cartTitle}>Корзина</Title>
                 </div>
 
                 {loading ? (
                     <div className={styles.cartEmpty}>
-                        <Text>Loading...</Text>
+                        <Text>Завантаження...</Text>
                     </div>
                 ) : cartItems.length === 0 ? (
                     <div className={styles.cartEmpty}>
                         <ShoppingCartOutlined className={styles.cartEmptyIcon} />
-                        <Text className={styles.cartEmptyText}>Your cart is empty</Text>
+                        <Text className={styles.cartEmptyText}>Ваша корзина пуста</Text>
                         <Button type="primary" onClick={() => router.push('/products')}>
-                            Continue Shopping
+                            Назад до покупок
                         </Button>
                     </div>
                 ) : (
@@ -93,7 +93,7 @@ const CartPage = () => {
                                         <div className={styles.itemPrice}>${formatPrice(item.priceAtTime)}</div>
                                     </div>
                                     <div className={styles.itemQuantity}>
-                                        <Text className={styles.quantityLabel}>Quantity:</Text>
+                                        <Text className={styles.quantityLabel}>Кількість:</Text>
                                         <InputNumber
                                             min={1}
                                             value={item.quantity}
@@ -106,7 +106,7 @@ const CartPage = () => {
                                         onClick={() => handleRemoveItem(item.productId)}
                                         icon={<DeleteOutlined />}
                                     >
-                                        Remove
+                                        Видалити
                                     </Button>
                                 </div>
                             ))}
@@ -118,7 +118,7 @@ const CartPage = () => {
                                 className={styles.backButton}
                                 onClick={() => router.push('/products')}
                             >
-                                Back to Shopping
+                                Назад до покупок
                             </Button>
                             <div className={styles.summaryContent}>
                                 <div className={styles.summaryRow}>
@@ -131,7 +131,7 @@ const CartPage = () => {
                                     onClick={() => router.push('/checkout')}
                                     className={styles.checkoutButton}
                                 >
-                                    Proceed to Checkout
+                                    Оформити замовлення
                                 </Button>
                             </div>
                         </div>

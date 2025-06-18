@@ -28,9 +28,9 @@ export default function HomePage() {
             priority
           />
           <div className={styles.overlay}>
-            <Title className={styles.title}>Welcome to Frenchies Beauty Salon</Title>
+            <Title className={styles.title}>Ласкаво просимо до салону краси Frenchies</Title>
             <Paragraph className={styles.subtitle}>
-              Experience luxury and elegance in every service
+              Відчуйте розкіш та елегантність у кожній послузі
             </Paragraph>
             <Button
               type="primary"
@@ -39,16 +39,16 @@ export default function HomePage() {
               icon={<CalendarOutlined />}
               className={styles.ctaButton}
             >
-              Book an Appointment
+              Записатися
             </Button>
           </div>
         </div>
       </section>
 
       <section className={styles.services}>
-        <Title level={2} className={styles.sectionTitle}>Our Services</Title>
+        <Title level={2} className={styles.sectionTitle}>Наші послуги</Title>
         <Paragraph className={styles.sectionSubtitle}>
-          Discover our range of premium beauty services
+          Відкрийте для себе наш асортимент преміальних косметичних послуг
         </Paragraph>
         <Row gutter={[32, 32]} className={styles.serviceCards}>
           <Col xs={24} sm={12} md={8}>
@@ -57,8 +57,8 @@ export default function HomePage() {
               cover={<div className={styles.cardIcon}><ScissorOutlined /></div>}
             >
               <Card.Meta
-                title="Hair Styling"
-                description="Professional cuts, coloring, and styling services tailored to your unique look."
+                title="Укладка волосся"
+                description="Професійні стрижки, фарбування та укладання, адаптовані до вашого унікального образу."
               />
             </Card>
           </Col>
@@ -68,8 +68,8 @@ export default function HomePage() {
               cover={<div className={styles.cardIcon}><SmileOutlined /></div>}
             >
               <Card.Meta
-                title="Nail Care"
-                description="Expert manicures, pedicures, and artistic nail designs for your perfect look."
+                title="Манікюр"
+                description="Професійний манікюр, педикюр та художній дизайн нігтів для вашого ідеального образу."
               />
             </Card>
           </Col>
@@ -79,8 +79,8 @@ export default function HomePage() {
               cover={<div className={styles.cardIcon}><SmileOutlined /></div>}
             >
               <Card.Meta
-                title="Skin Treatments"
-                description="Rejuvenating facials, masks, and specialized skin care treatments."
+                title="Процедури для шкіри"
+                description="Омолоджувальні процедури для обличчя, маски та спеціалізовані процедури догляду за шкірою."
               />
             </Card>
           </Col>

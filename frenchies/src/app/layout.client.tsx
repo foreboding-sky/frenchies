@@ -49,25 +49,16 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     const userMenuItems = [
         {
             key: 'profile',
-            label: <Link href="/profile">Profile</Link>,
+            label: <Link href="/profile">Профіль</Link>,
             icon: <UserOutlined />
         },
         {
             key: 'logout',
-            label: 'Log Out',
+            label: 'Вийти',
             icon: <LogoutOutlined />,
             onClick: handleLogout
         }
     ];
-
-    // Add admin menu item if user is admin
-    if (userProfile?.isAdmin) {
-        userMenuItems.unshift({
-            key: 'admin',
-            label: <Link href="/admin">Admin Dashboard</Link>,
-            icon: <DashboardOutlined />
-        });
-    }
 
     return (
         <AntdConfigProvider>
@@ -120,10 +111,10 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                                 ) : (
                                     <>
                                         <Link href="/login">
-                                            <Button>Log In</Button>
+                                            <Button>Логін</Button>
                                         </Link>
                                         <Link href="/register">
-                                            <Button type="primary">Register</Button>
+                                            <Button type="primary">Реєстрація</Button>
                                         </Link>
                                     </>
                                 )}
@@ -143,11 +134,11 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                             lineHeight: '48px'
                         }}
                         items={[
-                            { key: 'home', label: <Link href="/">Home</Link> },
-                            { key: 'about', label: <Link href="/about">About Us</Link> },
-                            { key: 'services', label: <Link href="/services">Services</Link> },
-                            { key: 'products', label: <Link href="/products">Products</Link> },
-                            ...(userProfile?.isAdmin ? [{ key: 'admin', label: <Link href="/admin">Admin</Link> }] : [])
+                            { key: 'home', label: <Link href="/">Головна</Link> },
+                            { key: 'about', label: <Link href="/about">Про нас</Link> },
+                            { key: 'services', label: <Link href="/services">Послуги</Link> },
+                            { key: 'products', label: <Link href="/products">Товари</Link> },
+                            ...(userProfile?.isAdmin ? [{ key: 'admin', label: <Link href="/admin">Адмін Панель</Link> }] : [])
                         ]}
                     />
                     <Content style={{

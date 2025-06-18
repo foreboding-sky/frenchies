@@ -133,7 +133,7 @@ export default function CheckoutPage() {
                 <div className={styles.contentSection}>
                     <div className={styles.loadingContainer}>
                         <Spin size="large" />
-                        <Typography.Text className={styles.loadingText}>Processing your order...</Typography.Text>
+                        <Typography.Text className={styles.loadingText}>Обробка вашого замовлення...</Typography.Text>
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
             <div className={styles.checkoutPage}>
                 <div className={styles.contentSection}>
                     <div className={styles.emptyCart}>
-                        <Typography.Text>Your cart is empty.</Typography.Text>
+                        <Typography.Text>Ваша корзина пуста.</Typography.Text>
                     </div>
                 </div>
             </div>
@@ -162,12 +162,12 @@ export default function CheckoutPage() {
                         className={styles.navButton}
                         onClick={() => router.push('/cart')}
                     >
-                        Back
+                        Назад
                     </Button>
                 </div>
                 <div className={styles.header}>
-                    <Typography.Title level={2} className={styles.title}>Checkout</Typography.Title>
-                    <Typography.Text className={styles.subtitle}>Complete your order details</Typography.Text>
+                    <Typography.Title level={2} className={styles.title}>Оформлення замовлення</Typography.Title>
+                    <Typography.Text className={styles.subtitle}>Заповніть деталі вашого замовлення</Typography.Text>
                 </div>
 
                 <Form
@@ -182,12 +182,12 @@ export default function CheckoutPage() {
                     }}
                 >
                     <Form.Item
-                        label="Name"
+                        label="Ім'я"
                         name="name"
                         rules={[
-                            { required: true, message: 'Please enter your name' },
-                            { min: 2, message: 'Name must be at least 2 characters' },
-                            { max: 50, message: 'Name cannot exceed 50 characters' }
+                            { required: true, message: 'Будь ласка, введіть ваше ім\'я' },
+                            { min: 2, message: 'Ім\'я має містити щонайменше 2 символи' },
+                            { max: 50, message: 'Ім\'я не може перевищувати 50 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -195,12 +195,12 @@ export default function CheckoutPage() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Surname"
+                        label="Прізвище"
                         name="surname"
                         rules={[
-                            { required: true, message: 'Please enter your surname' },
-                            { min: 2, message: 'Surname must be at least 2 characters' },
-                            { max: 50, message: 'Surname cannot exceed 50 characters' }
+                            { required: true, message: 'Будь ласка, введіть ваше прізвище' },
+                            { min: 2, message: 'Прізвище має містити щонайменше 2 символи' },
+                            { max: 50, message: 'Прізвище не може перевищувати 50 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -208,11 +208,11 @@ export default function CheckoutPage() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Phone"
+                        label="Телефон"
                         name="phone"
                         rules={[
-                            { required: true, message: 'Please enter your phone number' },
-                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Please enter a valid phone number' }
+                            { required: true, message: 'Будь ласка, введіть свій номер телефону' },
+                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Будь ласка, введіть дійсний номер телефону' }
                         ]}
                         className={styles.formItem}
                     >
@@ -220,12 +220,12 @@ export default function CheckoutPage() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Address"
+                        label="Адреса"
                         name="address"
                         rules={[
-                            { required: true, message: 'Please enter your address' },
-                            { min: 5, message: 'Address must be at least 5 characters' },
-                            { max: 200, message: 'Address cannot exceed 200 characters' }
+                            { required: true, message: 'Будь ласка, введіть свою адресу' },
+                            { min: 5, message: 'Адреса має містити щонайменше 5 символів' },
+                            { max: 200, message: 'Адреса не може перевищувати 200 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -233,12 +233,12 @@ export default function CheckoutPage() {
                     </Form.Item>
 
                     <Form.Item
-                        label="City"
+                        label="Місто"
                         name="city"
                         rules={[
-                            { required: true, message: 'Please enter your city' },
-                            { min: 2, message: 'City must be at least 2 characters' },
-                            { max: 50, message: 'City cannot exceed 50 characters' }
+                            { required: true, message: 'Будь ласка, введіть своє місто' },
+                            { min: 2, message: 'Місто має містити щонайменше 2 символи' },
+                            { max: 50, message: 'Місто не може перевищувати 50 символів' }
                         ]}
                         className={styles.formItem}
                     >
@@ -246,20 +246,20 @@ export default function CheckoutPage() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Payment Method"
+                        label="Спосіб оплати"
                         name="paymentMethod"
-                        rules={[{ required: true, message: 'Select a payment method' }]}
+                        rules={[{ required: true, message: 'Оберіть спосіб оплати' }]}
                         className={styles.formItem}
                     >
-                        <Select placeholder="Select payment method">
-                            <Select.Option value="Cash on delivery">Cash on delivery</Select.Option>
-                            <Select.Option value="Card">Card</Select.Option>
+                        <Select placeholder="Оберіть спосіб оплати">
+                            <Select.Option value="Cash on delivery">Готівка</Select.Option>
+                            <Select.Option value="Card">Картка</Select.Option>
                         </Select>
                     </Form.Item>
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" loading={submitting} className={styles.submitButton}>
-                            Place Order
+                            Підтвердити замовлення
                         </Button>
                     </Form.Item>
                 </Form>

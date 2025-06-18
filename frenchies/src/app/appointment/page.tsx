@@ -107,12 +107,12 @@ export default function AppointmentPage() {
                         className={styles.navButton}
                         onClick={() => router.back()}
                     >
-                        Back
+                        Назад
                     </Button>
                 </div>
                 <div className={styles.header}>
-                    <Title level={2} className={styles.title}>Book an Appointment</Title>
-                    <Text className={styles.subtitle}>Schedule your visit with our expert groomers</Text>
+                    <Title level={2} className={styles.title}>Записатися</Title>
+                    <Text className={styles.subtitle}>Заплануйте свій візит до наших досвідчених майстрів</Text>
                 </div>
 
                 <Form
@@ -123,11 +123,11 @@ export default function AppointmentPage() {
                 >
                     <Form.Item
                         name="name"
-                        label="Your Name"
+                        label="Ваше ім'я"
                         rules={[
-                            { required: true, message: 'Please enter your name' },
-                            { min: 2, message: 'Name must be at least 2 characters' },
-                            { max: 50, message: 'Name cannot exceed 50 characters' }
+                            { required: true, message: 'Будь ласка, введіть ваше ім\'я' },
+                            { min: 2, message: 'Ім\'я має містити щонайменше 2 символи' },
+                            { max: 50, message: 'Ім\'я не може перевищувати 50 символів' }
                         ]}
                     >
                         <Input placeholder="Enter your full name" />
@@ -135,10 +135,10 @@ export default function AppointmentPage() {
 
                     <Form.Item
                         name="phone"
-                        label="Phone Number"
+                        label="Номер телефону"
                         rules={[
-                            { required: true, message: 'Please enter your phone number' },
-                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Please enter a valid phone number' }
+                            { required: true, message: 'Будь ласка, введіть свій номер телефону' },
+                            { pattern: /^\+?[0-9]{10,15}$/, message: 'Будь ласка, введіть дійсний номер телефону' }
                         ]}
                     >
                         <Input placeholder="+380XXXXXXXXX" />
@@ -146,15 +146,15 @@ export default function AppointmentPage() {
 
                     <Form.Item
                         name="service"
-                        label="Select Services"
+                        label="Оберіть послуги"
                         rules={[
-                            { required: true, message: 'Please select at least one service' },
-                            { type: 'array', min: 1, message: 'Please select at least one service' }
+                            { required: true, message: 'Будь ласка, виберіть принаймні одну послугу' },
+                            { type: 'array', min: 1, message: 'Будь ласка, виберіть принаймні одну послугу' }
                         ]}
                     >
                         <Select
                             mode="multiple"
-                            placeholder="Choose one or more services"
+                            placeholder="Оберіть одну або декілька послуг"
                             style={{ width: '100%' }}
                         >
                             {services.map((service) => (
@@ -167,13 +167,13 @@ export default function AppointmentPage() {
 
                     <Form.Item
                         name="datetime"
-                        label="Preferred Date & Time"
+                        label="Дата й час"
                         rules={[
-                            { required: true, message: 'Please select date and time' },
+                            { required: true, message: 'Будь ласка, виберіть дату та час' },
                             {
                                 validator: async (_, value) => {
                                     if (value && value.toDate() < new Date()) {
-                                        throw new Error('Please select a future date and time');
+                                        throw new Error('Будь ласка, виберіть майбутню дату та час');
                                     }
                                 }
                             }
@@ -184,14 +184,14 @@ export default function AppointmentPage() {
 
                     <Form.Item
                         name="comment"
-                        label="Additional Comments"
+                        label="Коментар"
                         rules={[
-                            { max: 500, message: 'Comments cannot exceed 500 characters' }
+                            { max: 500, message: 'Коментарі не можуть перевищувати 500 символів' }
                         ]}
                     >
                         <TextArea
                             rows={4}
-                            placeholder="Any special requests or information we should know?"
+                            placeholder="Якісь особливі запити чи інформація, які нам слід знати?"
                         />
                     </Form.Item>
 
@@ -201,7 +201,7 @@ export default function AppointmentPage() {
                         loading={submitting}
                         className={styles.submitButton}
                     >
-                        Book Appointment
+                        Записатися
                     </Button>
                 </Form>
             </div>

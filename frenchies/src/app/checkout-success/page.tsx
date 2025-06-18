@@ -43,7 +43,7 @@ function CheckoutSuccessContent() {
                     <div className={styles.loadingContainer}>
                         <Spin size="large" />
                         <Typography.Text className={styles.loadingText}>
-                            Processing your order...
+                            Обробка вашого замовлення...
                         </Typography.Text>
                     </div>
                 </div>
@@ -61,7 +61,7 @@ function CheckoutSuccessContent() {
                         subTitle="We couldn't find your order. Please contact support if this persists."
                         extra={[
                             <Link href="/" key="home">
-                                <Button type="primary">Back to Home</Button>
+                                <Button type="primary">На головну</Button>
                             </Link>
                         ]}
                     />
@@ -94,7 +94,7 @@ function CheckoutSuccessContent() {
                 <div className={styles.actions}>
                     <Link href="/">
                         <Button type="primary" className={styles.actionButton}>
-                            Back to Home
+                            На головну
                         </Button>
                     </Link>
                 </div>
@@ -111,7 +111,7 @@ export default function CheckoutSuccessPage() {
                     <div className={styles.loadingContainer}>
                         <Spin size="large" />
                         <Typography.Text className={styles.loadingText}>
-                            Loading...
+                            Завантаження...
                         </Typography.Text>
                     </div>
                 </div>

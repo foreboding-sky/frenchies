@@ -9,29 +9,26 @@ export default function AboutPage() {
     return (
         <div className={styles.aboutWrapper}>
             <div className={styles.heroSection}>
-                <Title level={1} className={styles.heroTitle}>About Frenchies</Title>
+                <Title level={1} className={styles.heroTitle}>Про салон Frenchies</Title>
                 <Paragraph className={styles.heroSubtitle}>
-                    Where Beauty Meets Excellence
+                    Де краса зустрічається з досконалістю
                 </Paragraph>
             </div>
 
             <div className={styles.contentSection}>
                 <Card className={styles.aboutCard}>
-                    <Title level={2} className={styles.heading}>Our Story</Title>
+                    <Title level={2} className={styles.heading}>Наша історія</Title>
                     <Paragraph className={styles.paragraph}>
-                        Welcome to <strong>Frenchies Beauty Salon</strong> – your premier destination for luxury beauty services.
-                        Founded with a passion for excellence and attention to detail, we&apos;ve created a sanctuary where
-                        beauty meets sophistication.
+                        Ласкаво просимо до <strong>Салону краси Frenchies</strong> – вашого найкращого місця для пошуку розкішних косметичних послуг.
+                        Засновані з пристрастю до досконалості та увагою до деталей, ми створили затишок, де краса зустрічається з вишуканістю.
                     </Paragraph>
                     <Paragraph className={styles.paragraph}>
-                        Our team of experienced professionals is dedicated to providing you with personalized care and
-                        exceptional service. From hair styling to nail care and skin treatments, we ensure every visit
-                        leaves you feeling refreshed and confident.
+                        Наша команда досвідчених фахівців прагне забезпечити вам персоналізований догляд та винятковий сервіс. Від укладання волосся до догляду за нігтями та шкірою, ми гарантуємо, що кожен візит залишить вас бадьорими та впевненими.
                     </Paragraph>
                 </Card>
 
                 <Card className={styles.aboutCard}>
-                    <Title level={2} className={styles.heading}>Visit Us</Title>
+                    <Title level={2} className={styles.heading}>Відвідайте нас</Title>
                     <div className={styles.mapContainer}>
                         <iframe
                             title="Frenchies Salon Location"
@@ -51,7 +48,7 @@ export default function AboutPage() {
                             rel="noopener noreferrer"
                             className={styles.mapButton}
                         >
-                            Open in Google Maps
+                            Відкрити в Google Maps
                         </Button>
                     </div>
                 </Card>
@@ -62,8 +59,8 @@ export default function AboutPage() {
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <EnvironmentOutlined className={styles.contactIcon} />
                                 <div className={styles.contactInfo}>
-                                    <strong>Address</strong>
-                                    <p>Ivana Vyshenskoho St, 3,<br />Rivne, 33017</p>
+                                    <strong>Адреса</strong>
+                                    <p>Івана Вишенського, 3,<br />Рівне, 33017</p>
                                 </div>
                             </Space>
                         </Col>
@@ -71,7 +68,7 @@ export default function AboutPage() {
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <PhoneOutlined className={styles.contactIcon} />
                                 <div className={styles.contactInfo}>
-                                    <strong>Phone</strong>
+                                    <strong>Телефон</strong>
                                     <p>+380 98 123 45 67</p>
                                 </div>
                             </Space>
@@ -80,19 +77,19 @@ export default function AboutPage() {
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <ClockCircleOutlined className={styles.contactIcon} />
                                 <div className={styles.contactInfo}>
-                                    <strong>Hours</strong>
+                                    <strong>Графік</strong>
                                     <div className={styles.hoursList}>
                                         <div className={styles.hoursRow}>
-                                            <span>Mon-Fri:</span>
+                                            <span>Пн-Пт:</span>
                                             <span>09:00–20:00</span>
                                         </div>
                                         <div className={styles.hoursRow}>
-                                            <span>Saturday:</span>
+                                            <span>Субота:</span>
                                             <span>09:00–18:00</span>
                                         </div>
                                         <div className={styles.hoursRow}>
-                                            <span>Sunday:</span>
-                                            <span className={styles.closed}>Closed</span>
+                                            <span>Неділя:</span>
+                                            <span className={styles.closed}>Закрито</span>
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +99,7 @@ export default function AboutPage() {
                             <Space direction="vertical" align="center" className={styles.contactItem}>
                                 <InstagramOutlined className={styles.contactIcon} />
                                 <div className={styles.contactInfo}>
-                                    <strong>Instagram</strong>
+                                    <strong>Інстаграм</strong>
                                     <a
                                         href="https://www.instagram.com/frenchies.rivne/"
                                         target="_blank"
